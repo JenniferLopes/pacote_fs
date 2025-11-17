@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="R-Ladies Goiânia - Jennifer Lopes">
+<meta name="dcterms.date" content="2025-11-17">
+
+<title>Criando projetos, manipulando arquivos e organizando estruturas no R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="pacote_fs_files/libs/clipboard/clipboard.min.js"></script>
+<script src="pacote_fs_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="pacote_fs_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="pacote_fs_files/libs/quarto-html/popper.min.js"></script>
+<script src="pacote_fs_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="pacote_fs_files/libs/quarto-html/anchor.min.js"></script>
+<link href="pacote_fs_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="pacote_fs_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="pacote_fs_files/libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="pacote_fs_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="pacote_fs_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="pacote_fs_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="pacote_fs_files/libs/bootstrap/bootstrap-ba461ff7a8da32a117382727f331d949.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="pacote_fs_files/libs/bootstrap/bootstrap-dark-6690d7460971a03b54de4e4d4c2eb608.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="pacote_fs_files/libs/bootstrap/bootstrap-ba461ff7a8da32a117382727f331d949.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<style>html{ scroll-behavior: smooth; }</style>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: #b048a2;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: #b048a2;
+      }
+</style>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <div class="quarto-title-block"><div><h1 class="title">Criando projetos, manipulando arquivos e organizando estruturas no R</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+            <p class="subtitle lead">Pacotes: {fs}, {usethis} e {here}</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>R-Ladies Goiânia - Jennifer Lopes </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 17, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sumário</h2>
+   
+  <ul>
+  <li><a href="#introdução" id="toc-introdução" class="nav-link active" data-scroll-target="#introdução">Introdução</a></li>
+  <li><a href="#configuração-inicial" id="toc-configuração-inicial" class="nav-link" data-scroll-target="#configuração-inicial">Configuração Inicial</a></li>
+  <li><a href="#criando-um-projeto-com-usethis" id="toc-criando-um-projeto-com-usethis" class="nav-link" data-scroll-target="#criando-um-projeto-com-usethis">Criando um Projeto com {usethis}</a></li>
+  <li><a href="#navegação-com-here" id="toc-navegação-com-here" class="nav-link" data-scroll-target="#navegação-com-here">Navegação com {here}</a></li>
+  <li><a href="#manipulação-de-arquivos-com-fs" id="toc-manipulação-de-arquivos-com-fs" class="nav-link" data-scroll-target="#manipulação-de-arquivos-com-fs">Manipulação de Arquivos com {fs}</a></li>
+  <li><a href="#operações-com-arquivos" id="toc-operações-com-arquivos" class="nav-link" data-scroll-target="#operações-com-arquivos">Operações com Arquivos</a></li>
+  <li><a href="#manipulação-de-caminhos" id="toc-manipulação-de-caminhos" class="nav-link" data-scroll-target="#manipulação-de-caminhos">Manipulação de Caminhos</a></li>
+  <li><a href="#links-simbólicos" id="toc-links-simbólicos" class="nav-link" data-scroll-target="#links-simbólicos">Links simbólicos</a></li>
+  <li><a href="#arquivos-temporários" id="toc-arquivos-temporários" class="nav-link" data-scroll-target="#arquivos-temporários">Arquivos Temporários</a></li>
+  <li><a href="#exemplo" id="toc-exemplo" class="nav-link" data-scroll-target="#exemplo">Exemplo</a></li>
+  <li><a href="#boas-práticas-e-dicas" id="toc-boas-práticas-e-dicas" class="nav-link" data-scroll-target="#boas-práticas-e-dicas">Boas Práticas e Dicas</a></li>
+  <li><a href="#crie-um-template-de-projeto-pessoal" id="toc-crie-um-template-de-projeto-pessoal" class="nav-link" data-scroll-target="#crie-um-template-de-projeto-pessoal">Crie um <strong>template de projeto</strong> pessoal:</a></li>
+  <li><a href="#considerações" id="toc-considerações" class="nav-link" data-scroll-target="#considerações">Considerações</a></li>
+  <li><a href="#referências-e-links-úteis" id="toc-referências-e-links-úteis" class="nav-link" data-scroll-target="#referências-e-links-úteis">Referências e Links Úteis</a></li>
+  <li><a href="#apêndice-cheatsheet-rápido" id="toc-apêndice-cheatsheet-rápido" class="nav-link" data-scroll-target="#apêndice-cheatsheet-rápido">Apêndice: Cheatsheet Rápido</a></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+
+<div style="text-align: center; margin: 30px 0;">
+<p><img src="logo.png" class="img-fluid" width="350"></p>
+</div>
+<section id="introdução" class="level3">
+<h3 class="anchored" data-anchor-id="introdução">Introdução</h3>
+<p>Este documento apresenta um <strong>guia prático e completo</strong> para trabalhar com três pacotes essenciais do ecossistema R que revolucionam a forma como organizamos e gerenciamos projetos:</p>
+<ol type="1">
+<li><strong>{usethis}</strong> - Criar projetos reprodutíveis e configurar infraestrutura</li>
+<li><strong>{fs}</strong> - Manipular arquivos e pastas de forma segura e multiplataforma</li>
+<li><strong>{here}</strong> - Garantir caminhos consistentes e relativos ao projeto</li>
+</ol>
+<section id="por-que-usar-esses-pacotes" class="level4">
+<h4 class="anchored" data-anchor-id="por-que-usar-esses-pacotes">Por que usar esses pacotes?</h4>
+<p><strong>Problema comum:</strong> Caminhos absolutos como <code>C:/Users/MeuNome/Documents/projeto/data.csv</code> não funcionam em outros computadores.</p>
+<p><strong>Solução:</strong> Usar caminhos relativos com <code>{here}</code> garante que seu código funcione em qualquer máquina!</p>
+</section>
+<section id="fluxo-de-trabalho-recomendado" class="level4">
+<h4 class="anchored" data-anchor-id="fluxo-de-trabalho-recomendado">Fluxo de trabalho recomendado</h4>
+<ol type="1">
+<li><strong>Criar</strong> um projeto com <code>{usethis}</code></li>
+<li><strong>Colocar</strong> este arquivo <code>.qmd</code> dentro do projeto</li>
+<li><strong>Executar</strong> os chunks sequencialmente para aprender na prática</li>
+</ol>
+</section>
+</section>
+<section id="configuração-inicial" class="level3">
+<h3 class="anchored" data-anchor-id="configuração-inicial">Configuração Inicial</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instalar pacotes (se necessário)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(c("usethis", "fs", "here"))</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Carregar pacotes</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(usethis)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fs)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="criando-um-projeto-com-usethis" class="level3">
+<h3 class="anchored" data-anchor-id="criando-um-projeto-com-usethis">Criando um Projeto com {usethis}</h3>
+<section id="o-que-é-um-projeto-no-r" class="level4">
+<h4 class="anchored" data-anchor-id="o-que-é-um-projeto-no-r">O que é um projeto no R?</h4>
+<p>Um <strong>projeto</strong> (<code>.Rproj</code>) é um diretório que:</p>
+<ul>
+<li>Define o <strong>diretório de trabalho</strong> automaticamente</li>
+<li>Mantém <strong>histórico de comandos</strong> e <strong>ambiente</strong> isolados</li>
+<li>Facilita <strong>controle de versão</strong> (Git/GitHub)</li>
+<li>Garante <strong>reprodutibilidade</strong></li>
+</ul>
+</section>
+<section id="criando-seu-primeiro-projeto" class="level4">
+<h4 class="anchored" data-anchor-id="criando-seu-primeiro-projeto">Criando seu primeiro projeto</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ATENÇÃO: Execute isto APENAS UMA VEZ, fora deste documento!</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Isso criará uma nova pasta e abrirá uma nova sessão do RStudio</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># usethis::create_project("meu_projeto_fs")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="o-que-acontece-ao-criar-um-projeto" class="level4">
+<h4 class="anchored" data-anchor-id="o-que-acontece-ao-criar-um-projeto">O que acontece ao criar um projeto?</h4>
+<ol type="1">
+<li><p>Cria uma pasta com o nome especificado</p></li>
+<li><p>Gera um arquivo <code>.Rproj</code></p></li>
+<li><p>Cria <code>.gitignore</code> (para controle de versão)</p></li>
+<li><p>Abre uma <strong>nova sessão</strong> do RStudio no projeto</p></li>
+</ol>
+</section>
+<section id="outras-funções-úteis-do-usethis" class="level4">
+<h4 class="anchored" data-anchor-id="outras-funções-úteis-do-usethis">Outras funções úteis do {usethis}</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inicializar Git no projeto</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">use_git</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar repositório no GitHub</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">use_github</span>()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Adicionar arquivo README</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">use_readme_md</span>()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar arquivo de licença</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">use_mit_license</span>(<span class="st">"Jennifer Lopes"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Adicionar pacote ao DESCRIPTION</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">use_package</span>(<span class="st">"fs"</span>, <span class="st">"usethis"</span>, <span class="st">"here"</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar arquivo .gitignore personalizado</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">use_git_ignore</span>(<span class="fu">c</span>(<span class="st">"*.log"</span>, <span class="st">"*.tmp"</span>, <span class="st">"dados_sensiveis/"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="dica-importante" class="level4">
+<h4 class="anchored" data-anchor-id="dica-importante">Dica Importante</h4>
+<blockquote class="blockquote">
+<p>Sempre trabalhe dentro de <strong>projetos R</strong> (.Rproj). Isso elimina a necessidade de usar <code>setwd()</code> e garante que seus caminhos sejam relativos!</p>
+</blockquote>
+</section>
+</section>
+<section id="navegação-com-here" class="level3">
+<h3 class="anchored" data-anchor-id="navegação-com-here">Navegação com {here}</h3>
+<section id="por-que-usar-here" class="level4">
+<h4 class="anchored" data-anchor-id="por-que-usar-here">Por que usar {here}?</h4>
+<p>O pacote <code>{here}</code> resolve o problema de <strong>caminhos relativos</strong> de forma inteligente:</p>
+<ul>
+<li><p><strong>Multiplataforma</strong> (funciona em Windows, Mac, Linux)</p></li>
+<li><p><strong>Portável</strong> (código funciona em qualquer computador)</p></li>
+<li><p><strong>Inteligente</strong> (detecta automaticamente a raiz do projeto)</p></li>
+</ul>
+</section>
+<section id="encontrando-a-raiz-do-projeto" class="level4">
+<h4 class="anchored" data-anchor-id="encontrando-a-raiz-do-projeto">Encontrando a raiz do projeto</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostra o diretório raiz do projeto</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:/Users/User/Documents/GitHub/automacao"</code></pre>
+</div>
+</div>
+<p>O <code>{here}</code> procura por:</p>
+<ol type="1">
+<li>Arquivo <code>.Rproj</code></li>
+<li>Arquivo <code>.here</code></li>
+<li>Pasta <code>.git</code></li>
+<li>Arquivo <code>DESCRIPTION</code></li>
+</ol>
+</section>
+<section id="construindo-caminhos-relativos" class="level4">
+<h4 class="anchored" data-anchor-id="construindo-caminhos-relativos">Construindo caminhos relativos</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Caminho para pasta 'data'</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>(<span class="st">"data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:/Users/User/Documents/GitHub/automacao/data"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Caminho para arquivo específico</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"dados.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:/Users/User/Documents/GitHub/automacao/data/raw/dados.csv"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Caminho para script</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"analise.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:/Users/User/Documents/GitHub/automacao/scripts/analise.R"</code></pre>
+</div>
+</div>
+</section>
+<section id="evite-isso" class="level4">
+<h4 class="anchored" data-anchor-id="evite-isso">Evite isso:</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NÃO FAÇA:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"C:/Users/MeuNome/Documents/projeto"</span>)  <span class="co"># Não funciona em outros PCs</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">read.csv</span>(<span class="st">"../data/arquivo.csv"</span>)  <span class="co"># Caminho frágil</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># FAÇA:</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.csv"</span>))  <span class="co"># Sempre funciona!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="manipulação-de-arquivos-com-fs" class="level3">
+<h3 class="anchored" data-anchor-id="manipulação-de-arquivos-com-fs">Manipulação de Arquivos com {fs}</h3>
+<section id="por-que-usar-fs-em-vez-de-funções-base" class="level4">
+<h4 class="anchored" data-anchor-id="por-que-usar-fs-em-vez-de-funções-base">Por que usar {fs} em vez de funções base?</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Característica</th>
+<th>{fs}</th>
+<th>Funções base</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sintaxe</td>
+<td>Consistente e clara</td>
+<td>Variada e confusa</td>
+</tr>
+<tr class="even">
+<td>Multiplataforma</td>
+<td>- Sim</td>
+<td>- Limitado</td>
+</tr>
+<tr class="odd">
+<td>Mensagens de erro</td>
+<td>Claras e informativas</td>
+<td>Obscuras</td>
+</tr>
+<tr class="even">
+<td>Retorno</td>
+<td>Tibbles estruturados</td>
+<td>Vetores simples</td>
+</tr>
+<tr class="odd">
+<td>Segurança</td>
+<td>Verificações automáticas</td>
+<td>Manual</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="criando-a-estrutura-do-projeto" class="level4">
+<h4 class="anchored" data-anchor-id="criando-a-estrutura-do-projeto">Criando a estrutura do projeto</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar diretórios principais</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>))      <span class="co"># Dados brutos (nunca modificar!</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"clean"</span>))    <span class="co"># Dados limpos/processados</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>))          <span class="co"># Scripts R</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"outputs"</span>))          <span class="co"># Resultados/tabelas</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"figures"</span>))          <span class="co"># Gráficos</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"reports"</span>))          <span class="co"># Relatórios</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizar estrutura criada</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_tree</span>(<span class="fu">here</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>C:/Users/User/Documents/GitHub/automacao
+├── data
+│   ├── clean
+│   └── raw
+├── figures
+├── footer.html
+├── logo.png
+├── outputs
+├── pacote_fs.qmd
+├── pacote_fs.rmarkdown
+├── pacote_fs.Rproj
+├── README.md
+├── reports
+├── scripts
+├── slides_fs.qmd
+├── styles.css
+└── _publish.yml</code></pre>
+</div>
+</div>
+</section>
+<section id="estrutura-de-pastas-recomendada" class="level4">
+<h4 class="anchored" data-anchor-id="estrutura-de-pastas-recomendada">Estrutura de Pastas Recomendada</h4>
+<pre><code>meu_projeto/
+├── data/
+│   ├── raw/          # Dados originais (somente leitura)
+│   └── clean/        # Dados processados
+├── scripts/          # Código R (.R)
+├── reports/          # Relatórios (.Rmd, .qmd)
+├── outputs/          # Tabelas, resultados
+├── figures/          # Gráficos (PNG, PDF)
+└── README.md         # Documentação do projeto</code></pre>
+</section>
+</section>
+<section id="operações-com-arquivos" class="level3">
+<h3 class="anchored" data-anchor-id="operações-com-arquivos">Operações com Arquivos</h3>
+<section id="criar-arquivos" class="level4">
+<h4 class="anchored" data-anchor-id="criar-arquivos">Criar arquivos</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar arquivo vazio</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar múltiplos arquivos</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">file_create</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="fu">c</span>(<span class="st">"01-import.R"</span>, <span class="st">"02-clean.R"</span>, <span class="st">"03-analyze.R"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Quando usar:</strong> Para inicializar arquivos que serão preenchidos depois.</p>
+</section>
+<section id="copiar-arquivos-e-diretórios" class="level4">
+<h4 class="anchored" data-anchor-id="copiar-arquivos-e-diretórios">Copiar arquivos e diretórios</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Copiar arquivo</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file_copy</span>(</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo_backup.txt"</span>),</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span>  <span class="co"># Sobrescrever se já existir</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Copiar diretório inteiro</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_copy</span>(</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>),</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw_backup"</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Quando usar:</strong> Para criar backups ou duplicar estruturas.</p>
+</section>
+<section id="mover-e-renomear" class="level4">
+<h4 class="anchored" data-anchor-id="mover-e-renomear">Mover e renomear</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mover arquivo (= renomear)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file_move</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo_backup.txt"</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo_renomeado.txt"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Mover para outra pasta</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">file_move</span>(</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo_renomeado.txt"</span>),</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_path =</span> <span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"arquivo_renomeado.txt"</span>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Nota:</strong> <code>file_move()</code> serve tanto para mover quanto para renomear!</p>
+</section>
+<section id="listar-arquivos-e-diretórios" class="level4">
+<h4 class="anchored" data-anchor-id="listar-arquivos-e-diretórios">Listar arquivos e diretórios</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Listar tudo na pasta 'data'</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_ls</span>(<span class="fu">here</span>(<span class="st">"data"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>C:/Users/User/Documents/GitHub/automacao/data/arquivo.txt
+C:/Users/User/Documents/GitHub/automacao/data/clean
+C:/Users/User/Documents/GitHub/automacao/data/raw
+C:/Users/User/Documents/GitHub/automacao/data/raw_backup</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Listar apenas arquivos .R</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_ls</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>), <span class="at">glob =</span> <span class="st">"*.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>C:/Users/User/Documents/GitHub/automacao/scripts/01-import.R
+C:/Users/User/Documents/GitHub/automacao/scripts/02-clean.R
+C:/Users/User/Documents/GitHub/automacao/scripts/03-analyze.R</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Listar recursivamente (incluir subpastas)</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_ls</span>(<span class="fu">here</span>(<span class="st">"data"</span>), <span class="at">recurse =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>C:/Users/User/Documents/GitHub/automacao/data/arquivo.txt
+C:/Users/User/Documents/GitHub/automacao/data/clean
+C:/Users/User/Documents/GitHub/automacao/data/raw
+C:/Users/User/Documents/GitHub/automacao/data/raw_backup</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Listar apenas diretórios</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_ls</span>(<span class="fu">here</span>(), <span class="at">type =</span> <span class="st">"directory"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>C:/Users/User/Documents/GitHub/automacao/data
+C:/Users/User/Documents/GitHub/automacao/figures
+C:/Users/User/Documents/GitHub/automacao/outputs
+C:/Users/User/Documents/GitHub/automacao/reports
+C:/Users/User/Documents/GitHub/automacao/scripts</code></pre>
+</div>
+</div>
+<p><strong>Quando usar:</strong> Para verificar conteúdo, auditar arquivos ou criar pipelines.</p>
+</section>
+<section id="obter-informações-detalhadas" class="level4">
+<h4 class="anchored" data-anchor-id="obter-informações-detalhadas">Obter informações detalhadas</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Informações de um arquivo</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file_info</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 18
+  path         type   size permissions modification_time   user  group device_id
+  &lt;fs::path&gt;   &lt;fct&gt; &lt;fs:&gt; &lt;fs::perms&gt; &lt;dttm&gt;              &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;
+1 …arquivo.txt file      0 rw-         2025-11-17 14:35:34 &lt;NA&gt;  &lt;NA&gt;     1.24e9
+# ℹ 10 more variables: hard_links &lt;dbl&gt;, special_device_id &lt;dbl&gt;, inode &lt;dbl&gt;,
+#   block_size &lt;dbl&gt;, blocks &lt;dbl&gt;, flags &lt;int&gt;, generation &lt;dbl&gt;,
+#   access_time &lt;dttm&gt;, change_time &lt;dttm&gt;, birth_time &lt;dttm&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Informações úteis específicas</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file_size</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>))      <span class="co"># Tamanho</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">file_exists</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>))    <span class="co"># Existe?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>C:/Users/User/Documents/GitHub/automacao/data/arquivo.txt 
+                                                     TRUE </code></pre>
+</div>
+</div>
+<p><strong>Retorna:</strong> Tibble com tamanho, permissões, datas de modificação, etc.</p>
+</section>
+<section id="deletar-arquivos-e-diretórios" class="level4">
+<h4 class="anchored" data-anchor-id="deletar-arquivos-e-diretórios">Deletar arquivos e diretórios</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Deletar arquivo</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file_delete</span>(<span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"arquivo_renomeado.txt"</span>))</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Deletar diretório vazio</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_delete</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw_backup"</span>))</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co"># CUIDADO: Deletar diretório com conteúdo</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co"># dir_delete(here("data"), recurse = TRUE)  # Use com cautela!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>ATENÇÃO:</strong> <code>file_delete()</code> e <code>dir_delete()</code> são <strong>permanentes</strong> (não vão para lixeira)!</p>
+</section>
+</section>
+<section id="manipulação-de-caminhos" class="level3">
+<h3 class="anchored" data-anchor-id="manipulação-de-caminhos">Manipulação de Caminhos</h3>
+<section id="construir-caminhos-de-forma-segura" class="level4">
+<h4 class="anchored" data-anchor-id="construir-caminhos-de-forma-segura">Construir caminhos de forma segura</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construir caminho (alternativa ao here)</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">path</span>(<span class="st">"pasta"</span>, <span class="st">"subpasta"</span>, <span class="st">"arquivo.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>pasta/subpasta/arquivo.csv</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Combina caminhos corretamente em qualquer SO</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">path</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"dados.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data/raw/dados.xlsx</code></pre>
+</div>
+</div>
+<p><strong>Por que usar:</strong> Funciona em Windows (<code>\</code>), Mac/Linux (<code>/</code>) automaticamente.</p>
+</section>
+<section id="trabalhar-com-extensões" class="level4">
+<h4 class="anchored" data-anchor-id="trabalhar-com-extensões">Trabalhar com extensões</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extrair extensão</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">path_ext</span>(<span class="st">"relatorio.docx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "docx"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mudar extensão</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">path_ext_set</span>(<span class="st">"relatorio.docx"</span>, <span class="st">"pdf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>relatorio.pdf</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remover extensão</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">path_ext_remove</span>(<span class="st">"analise.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "analise"</code></pre>
+</div>
+</div>
+<p><strong>Útil para:</strong> Converter formatos, validar tipos de arquivo.</p>
+</section>
+<section id="caminhos-absolutos-vs-relativos" class="level4">
+<h4 class="anchored" data-anchor-id="caminhos-absolutos-vs-relativos">Caminhos absolutos vs relativos</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformar em caminho absoluto</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">path_abs</span>(<span class="st">"data/arquivo.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>C:/Users/User/Documents/GitHub/automacao/data/arquivo.txt</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obter caminho relativo</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">path_rel</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>), <span class="at">start =</span> <span class="fu">here</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>data/arquivo.txt</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nome do arquivo (sem caminho)</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">path_file</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "arquivo.txt"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diretório pai</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">path_dir</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:/Users/User/Documents/GitHub/automacao/data"</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="links-simbólicos" class="level3">
+<h3 class="anchored" data-anchor-id="links-simbólicos">Links simbólicos</h3>
+<section id="o-que-são-links-simbólicos" class="level4">
+<h4 class="anchored" data-anchor-id="o-que-são-links-simbólicos">O que são links simbólicos?</h4>
+<p><strong>Links simbólicos</strong> são “atalhos” que apontam para outro arquivo/pasta sem duplicar dados.</p>
+</section>
+<section id="criar-e-gerenciar-links" class="level4">
+<h4 class="anchored" data-anchor-id="criar-e-gerenciar-links">Criar e gerenciar links</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar link simbólico</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">link_create</span>(</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>),</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"atalho_link"</span>))</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificar para onde o link aponta</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="fu">link_path</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"atalho_link"</span>))</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Deletar link (não deleta arquivo original)</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="fu">link_delete</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"atalho_link"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Quando usar:</strong> Para acessar arquivos em múltiplos locais sem duplicar espaço.</p>
+</section>
+</section>
+<section id="arquivos-temporários" class="level3">
+<h3 class="anchored" data-anchor-id="arquivos-temporários">Arquivos Temporários</h3>
+<section id="por-que-usar-arquivos-temporários" class="level4">
+<h4 class="anchored" data-anchor-id="por-que-usar-arquivos-temporários">Por que usar arquivos temporários?</h4>
+<p>Arquivos temporários são úteis para:</p>
+<ul>
+<li>Armazenar dados intermediários</li>
+<li>Testes</li>
+<li>Limpeza automática após sessão</li>
+</ul>
+</section>
+<section id="criar-arquivos-temporários" class="level4">
+<h4 class="anchored" data-anchor-id="criar-arquivos-temporários">Criar arquivos temporários</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar arquivo temporário</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>arquivo_temp <span class="ot">&lt;-</span> <span class="fu">file_temp</span>(<span class="at">ext =</span> <span class="st">".csv"</span>)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>arquivo_temp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>C:/Users/User/AppData/Local/Temp/RtmpCoCZKO/file3a985fbd7f40.csv</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Caminho do diretório temporário</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">path_temp</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>C:/Users/User/AppData/Local/Temp/RtmpCoCZKO</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar arquivo temporário com nome específico</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file_temp</span>(<span class="st">"meus_dados"</span>, <span class="at">ext =</span> <span class="st">".rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>C:/Users/User/AppData/Local/Temp/RtmpCoCZKO/meus_dados3a98b5e7b3e.rds</code></pre>
+</div>
+</div>
+<p><strong>Vantagem:</strong> Sistema operacional limpa automaticamente arquivos temporários.</p>
+</section>
+</section>
+<section id="exemplo" class="level3">
+<h3 class="anchored" data-anchor-id="exemplo">Exemplo</h3>
+<section id="cenário-projeto-de-análise-de-dados" class="level4">
+<h4 class="anchored" data-anchor-id="cenário-projeto-de-análise-de-dados">Cenário: Projeto de análise de dados</h4>
+<p>Vamos criar um projeto completo do zero:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Criar estrutura de pastas</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>))</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"clean"</span>))</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>))</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"outputs"</span>))</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"figures"</span>))</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"reports"</span>))</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Criar scripts de análise</span></span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>scripts <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"01-import-data.R"</span>,</span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"02-clean-data.R"</span>,</span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"03-exploratory-analysis.R"</span>,</span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"04-modeling.R"</span>,</span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"05-visualization.R"</span></span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a><span class="fu">file_create</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, scripts))</span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Criar arquivo README</span></span>
+<span id="cb59-20"><a href="#cb59-20" aria-hidden="true" tabindex="-1"></a><span class="fu">file_create</span>(<span class="fu">here</span>(<span class="st">"README.md"</span>))</span>
+<span id="cb59-21"><a href="#cb59-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-22"><a href="#cb59-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Visualizar estrutura final</span></span>
+<span id="cb59-23"><a href="#cb59-23" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_tree</span>(<span class="fu">here</span>(), <span class="at">recurse =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>C:/Users/User/Documents/GitHub/automacao
+├── data
+│   ├── arquivo.txt
+│   ├── clean
+│   └── raw
+├── figures
+├── footer.html
+├── logo.png
+├── outputs
+├── pacote_fs.qmd
+├── pacote_fs.rmarkdown
+├── pacote_fs.Rproj
+├── README.md
+├── reports
+├── scripts
+│   ├── 01-import-data.R
+│   ├── 01-import.R
+│   ├── 02-clean-data.R
+│   ├── 02-clean.R
+│   ├── 03-analyze.R
+│   ├── 03-exploratory-analysis.R
+│   ├── 04-modeling.R
+│   └── 05-visualization.R
+├── slides_fs.qmd
+├── styles.css
+└── _publish.yml</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="boas-práticas-e-dicas" class="level3">
+<h3 class="anchored" data-anchor-id="boas-práticas-e-dicas">Boas Práticas e Dicas</h3>
+<section id="faça" class="level4">
+<h4 class="anchored" data-anchor-id="faça">Faça</h4>
+<ol type="1">
+<li><strong>Use projetos R</strong> para todos os trabalhos</li>
+<li><strong>Sempre use <code>here()</code></strong> para caminhos</li>
+<li><strong>Documente</strong> a estrutura no README</li>
+<li><strong>Nunca modifique</strong> dados em <code>data/raw</code></li>
+<li><strong>Use nomes descritivos</strong> para arquivos e pastas</li>
+<li><strong>Versione</strong> seu projeto com Git</li>
+</ol>
+</section>
+<section id="evite" class="level4">
+<h4 class="anchored" data-anchor-id="evite">Evite</h4>
+<ol type="1">
+<li><p><code>setwd()</code> - Nunca use!</p></li>
+<li><p>Caminhos absolutos - Não são portáveis</p></li>
+<li><p>Espaços em nomes - Use <code>_</code> ou <code>-</code></p></li>
+<li><p>Caracteres especiais - Evite acentos</p></li>
+<li><p>Modificar dados originais - Mantenha em <code>raw/</code></p></li>
+</ol>
+</section>
+</section>
+<section id="crie-um-template-de-projeto-pessoal" class="level3">
+<h3 class="anchored" data-anchor-id="crie-um-template-de-projeto-pessoal">Crie um <strong>template de projeto</strong> pessoal:</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Salve este script como "setup_projeto.R"</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>criar_projeto_padrao <span class="ot">&lt;-</span> <span class="cf">function</span>(nome) {</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  usethis<span class="sc">::</span><span class="fu">create_project</span>(nome)</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Estrutura de pastas</span></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>  fs<span class="sc">::</span><span class="fu">dir_create</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="fu">c</span>(<span class="st">"raw"</span>, <span class="st">"clean"</span>)))</span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>  fs<span class="sc">::</span><span class="fu">dir_create</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="fu">c</span>(<span class="st">"scripts"</span>, <span class="st">"outputs"</span>, <span class="st">"figures"</span>, <span class="st">"reports"</span>)))</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Scripts básicos</span></span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>  fs<span class="sc">::</span><span class="fu">file_create</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="fu">c</span>(</span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01-import.R"</span>,</span>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"02-clean.R"</span>, </span>
+<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"03-analyze.R"</span></span>
+<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a>  )))</span>
+<span id="cb61-15"><a href="#cb61-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># README</span></span>
+<span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a>  usethis<span class="sc">::</span><span class="fu">use_readme_md</span>()</span>
+<span id="cb61-18"><a href="#cb61-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb61-19"><a href="#cb61-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Git</span></span>
+<span id="cb61-20"><a href="#cb61-20" aria-hidden="true" tabindex="-1"></a>  usethis<span class="sc">::</span><span class="fu">use_git</span>()</span>
+<span id="cb61-21"><a href="#cb61-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb61-22"><a href="#cb61-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"- Projeto criado com sucesso!"</span>)</span>
+<span id="cb61-23"><a href="#cb61-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb61-24"><a href="#cb61-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-25"><a href="#cb61-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Usar:</span></span>
+<span id="cb61-26"><a href="#cb61-26" aria-hidden="true" tabindex="-1"></a><span class="co"># criar_projeto_padrao("meu_novo_projeto")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="considerações" class="level3">
+<h3 class="anchored" data-anchor-id="considerações">Considerações</h3>
+<p>Você agora domina os <strong>três pilares</strong> da organização de projetos em R:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 40%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pacote</th>
+<th>Função Principal</th>
+<th>Quando Usar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>{usethis}</strong></td>
+<td>Criar e configurar projetos</td>
+<td>Início do projeto</td>
+</tr>
+<tr class="even">
+<td><strong>{fs}</strong></td>
+<td>Manipular arquivos/pastas</td>
+<td>Gerenciamento de arquivos</td>
+</tr>
+<tr class="odd">
+<td><strong>{here}</strong></td>
+<td>Caminhos relativos seguros</td>
+<td>Sempre!</td>
+</tr>
+</tbody>
+</table>
+<section id="próximos-passos" class="level4">
+<h4 class="anchored" data-anchor-id="próximos-passos">Próximos passos</h4>
+<ol type="1">
+<li><p>Pratique criando projetos reais</p></li>
+<li><p>Integre com controle de versão (Git/GitHub)</p></li>
+<li><p>Explore outros pacotes: <code>{renv}</code> (gerenciar dependências), <code>{targets}</code> (pipelines)</p></li>
+<li><p>Documente sempre com README.md</p></li>
+</ol>
+</section>
+</section>
+<section id="referências-e-links-úteis" class="level3">
+<h3 class="anchored" data-anchor-id="referências-e-links-úteis">Referências e Links Úteis</h3>
+<section id="documentação-dos-pacotes" class="level4">
+<h4 class="anchored" data-anchor-id="documentação-dos-pacotes">Documentação dos Pacotes</h4>
+<ul>
+<li><strong>{usethis}</strong>
+<ul>
+<li><a href="https://usethis.r-lib.org/">Site oficial</a><br>
+</li>
+<li><a href="https://usethis.r-lib.org/reference/index.html">Documentação completa</a><br>
+</li>
+<li><a href="https://github.com/r-lib/usethis">GitHub</a></li>
+</ul></li>
+<li><strong>{fs}</strong>
+<ul>
+<li><a href="https://fs.r-lib.org/">Site oficial</a><br>
+</li>
+<li><a href="https://fs.r-lib.org/reference/index.html">Documentação completa</a><br>
+</li>
+<li><a href="https://github.com/r-lib/fs">GitHub</a></li>
+</ul></li>
+<li><strong>{here}</strong>
+<ul>
+<li><a href="https://here.r-lib.org/">Site oficial</a><br>
+</li>
+<li><a href="https://here.r-lib.org/reference/index.html">Documentação completa</a><br>
+</li>
+<li><a href="https://github.com/r-lib/here">GitHub</a></li>
+</ul></li>
+</ul>
+</section>
+<section id="artigo" class="level4">
+<h4 class="anchored" data-anchor-id="artigo">Artigo</h4>
+<ul>
+<li><p><a href="https://r4ds.hadley.nz/workflow-scripts.html#projects">R for Data Science - Workflow: projects</a><br>
+<em>Capítulo sobre organização de projetos</em></p></li>
+<li><p><a href="https://support.posit.co/hc/en-us/articles/200526207-Using-RStudio-Projects">RStudio Projects Tutorial</a><br>
+<em>Tutorial oficial da Posit</em></p></li>
+</ul>
+</section>
+<section id="ferramentas-complementares" class="level4">
+<h4 class="anchored" data-anchor-id="ferramentas-complementares">Ferramentas complementares</h4>
+<ul>
+<li><p><strong>{renv}</strong> - Gerenciamento de dependências<br>
+<a href="https://rstudio.github.io/renv/" class="uri">https://rstudio.github.io/renv/</a></p></li>
+<li><p><strong>{targets}</strong> - Pipelines de análise<br>
+<a href="https://docs.ropensci.org/targets/" class="uri">https://docs.ropensci.org/targets/</a></p></li>
+</ul>
+</section>
+<section id="autor-e-contribuições" class="level4">
+<h4 class="anchored" data-anchor-id="autor-e-contribuições">Autor e contribuições</h4>
+<p><em>Este documento foi criado como material educacional. Sinta-se livre para compartilhar e adaptar conforme necessário!</em></p>
+</section>
+</section>
+<section id="apêndice-cheatsheet-rápido" class="level3">
+<h3 class="anchored" data-anchor-id="apêndice-cheatsheet-rápido">Apêndice: Cheatsheet Rápido</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CRIAR PROJETO</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_project</span>(<span class="st">"nome_projeto"</span>)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ESTRUTURA</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here); <span class="fu">library</span>(fs)</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>))</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>))</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a><span class="co"># CAMINHOS</span></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.csv"</span>)  <span class="co"># Sempre use!</span></span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ARQUIVOS</span></span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a><span class="fu">file_create</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"analise.R"</span>))</span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a><span class="fu">file_copy</span>(origem, destino)</span>
+<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a><span class="fu">file_move</span>(origem, destino)</span>
+<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a><span class="fu">file_delete</span>(arquivo)</span>
+<span id="cb62-17"><a href="#cb62-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-18"><a href="#cb62-18" aria-hidden="true" tabindex="-1"></a><span class="co"># PASTAS</span></span>
+<span id="cb62-19"><a href="#cb62-19" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"nova_pasta"</span>))</span>
+<span id="cb62-20"><a href="#cb62-20" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_ls</span>(<span class="fu">here</span>(<span class="st">"data"</span>))</span>
+<span id="cb62-21"><a href="#cb62-21" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_tree</span>(<span class="fu">here</span>())</span>
+<span id="cb62-22"><a href="#cb62-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-23"><a href="#cb62-23" aria-hidden="true" tabindex="-1"></a><span class="co"># GIT</span></span>
+<span id="cb62-24"><a href="#cb62-24" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_git</span>()</span>
+<span id="cb62-25"><a href="#cb62-25" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_github</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- -->
+
+</section>
+
+</main>
+<!-- /main column -->
+<footer>
+
+  <hr>
+
+  <p></p>
+
+  <p style="text-align: center; color: #b048a2; font-weight: 600;">
+
+    R-Ladies Goiânia | Tutorial 2025
+
+  </p>
+
+  <p style="text-align: center; font-size: 0.9em; color: #666;">
+
+    Material educacional gratuito | 
+
+    <a href="https://www.rladiesgyn.com/" target="_blank" style="color: #b048a2;">https://www.rladiesgyn.com/</a>
+
+  </p>
+
+</footer>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb63" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Criando projetos, manipulando arquivos e organizando estruturas no R"</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Pacotes: {fs}, {usethis} e {here}"</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "R-Ladies Goiânia - Jennifer Lopes"</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> today</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 3</span></span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-location: left</span></span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-title: "Sumário"</span></span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: false</span></span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: false</span></span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a><span class="co">    smooth-scroll: true</span></span>
+<span id="cb63-17"><a href="#cb63-17" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: </span></span>
+<span id="cb63-18"><a href="#cb63-18" aria-hidden="true" tabindex="-1"></a><span class="co">      light: flatly</span></span>
+<span id="cb63-19"><a href="#cb63-19" aria-hidden="true" tabindex="-1"></a><span class="co">      dark: darkly</span></span>
+<span id="cb63-20"><a href="#cb63-20" aria-hidden="true" tabindex="-1"></a><span class="co">    css: styles.css</span></span>
+<span id="cb63-21"><a href="#cb63-21" aria-hidden="true" tabindex="-1"></a><span class="co">    mainfont: "Segoe UI"</span></span>
+<span id="cb63-22"><a href="#cb63-22" aria-hidden="true" tabindex="-1"></a><span class="co">    fontsize: 1.1em</span></span>
+<span id="cb63-23"><a href="#cb63-23" aria-hidden="true" tabindex="-1"></a><span class="co">    linestretch: 1.6</span></span>
+<span id="cb63-24"><a href="#cb63-24" aria-hidden="true" tabindex="-1"></a><span class="co">    link-external-newwindow: true</span></span>
+<span id="cb63-25"><a href="#cb63-25" aria-hidden="true" tabindex="-1"></a><span class="co">    include-after-body: footer.html</span></span>
+<span id="cb63-26"><a href="#cb63-26" aria-hidden="true" tabindex="-1"></a><span class="co">    title-block-banner: true</span></span>
+<span id="cb63-27"><a href="#cb63-27" aria-hidden="true" tabindex="-1"></a><span class="co">    title-block-banner-color: "#b048a2"</span></span>
+<span id="cb63-28"><a href="#cb63-28" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb63-29"><a href="#cb63-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-30"><a href="#cb63-30" aria-hidden="true" tabindex="-1"></a>::: {style="text-align: center; margin: 30px 0;"}</span>
+<span id="cb63-31"><a href="#cb63-31" aria-hidden="true" tabindex="-1"></a><span class="al">![](logo.png)</span>{width="350px"}</span>
+<span id="cb63-32"><a href="#cb63-32" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb63-33"><a href="#cb63-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-34"><a href="#cb63-34" aria-hidden="true" tabindex="-1"></a><span class="fu">### Introdução</span></span>
+<span id="cb63-35"><a href="#cb63-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-36"><a href="#cb63-36" aria-hidden="true" tabindex="-1"></a>Este documento apresenta um **guia prático e completo** para trabalhar com três pacotes essenciais do ecossistema R que revolucionam a forma como organizamos e gerenciamos projetos:</span>
+<span id="cb63-37"><a href="#cb63-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-38"><a href="#cb63-38" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**{usethis}** - Criar projetos reprodutíveis e configurar infraestrutura</span>
+<span id="cb63-39"><a href="#cb63-39" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>**{fs}** - Manipular arquivos e pastas de forma segura e multiplataforma</span>
+<span id="cb63-40"><a href="#cb63-40" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>**{here}** - Garantir caminhos consistentes e relativos ao projeto</span>
+<span id="cb63-41"><a href="#cb63-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-42"><a href="#cb63-42" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Por que usar esses pacotes?</span></span>
+<span id="cb63-43"><a href="#cb63-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-44"><a href="#cb63-44" aria-hidden="true" tabindex="-1"></a>**Problema comum:** Caminhos absolutos como <span class="in">`C:/Users/MeuNome/Documents/projeto/data.csv`</span> não funcionam em outros computadores.</span>
+<span id="cb63-45"><a href="#cb63-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-46"><a href="#cb63-46" aria-hidden="true" tabindex="-1"></a>**Solução:** Usar caminhos relativos com <span class="in">`{here}`</span> garante que seu código funcione em qualquer máquina!</span>
+<span id="cb63-47"><a href="#cb63-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-48"><a href="#cb63-48" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Fluxo de trabalho recomendado</span></span>
+<span id="cb63-49"><a href="#cb63-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-50"><a href="#cb63-50" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**Criar** um projeto com <span class="in">`{usethis}`</span></span>
+<span id="cb63-51"><a href="#cb63-51" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>**Colocar** este arquivo <span class="in">`.qmd`</span> dentro do projeto</span>
+<span id="cb63-52"><a href="#cb63-52" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>**Executar** os chunks sequencialmente para aprender na prática</span>
+<span id="cb63-53"><a href="#cb63-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-54"><a href="#cb63-54" aria-hidden="true" tabindex="-1"></a><span class="fu">### Configuração Inicial</span></span>
+<span id="cb63-55"><a href="#cb63-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-56"><a href="#cb63-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, message=FALSE, warning=FALSE}</span></span>
+<span id="cb63-57"><a href="#cb63-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Instalar pacotes (se necessário)</span></span>
+<span id="cb63-58"><a href="#cb63-58" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(c("usethis", "fs", "here"))</span></span>
+<span id="cb63-59"><a href="#cb63-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-60"><a href="#cb63-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Carregar pacotes</span></span>
+<span id="cb63-61"><a href="#cb63-61" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(usethis)</span>
+<span id="cb63-62"><a href="#cb63-62" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fs)</span>
+<span id="cb63-63"><a href="#cb63-63" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb63-64"><a href="#cb63-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-65"><a href="#cb63-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-66"><a href="#cb63-66" aria-hidden="true" tabindex="-1"></a><span class="fu">### Criando um Projeto com {usethis}</span></span>
+<span id="cb63-67"><a href="#cb63-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-68"><a href="#cb63-68" aria-hidden="true" tabindex="-1"></a><span class="fu">#### O que é um projeto no R?</span></span>
+<span id="cb63-69"><a href="#cb63-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-70"><a href="#cb63-70" aria-hidden="true" tabindex="-1"></a>Um **projeto** (<span class="in">`.Rproj`</span>) é um diretório que:</span>
+<span id="cb63-71"><a href="#cb63-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-72"><a href="#cb63-72" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Define o **diretório de trabalho** automaticamente</span>
+<span id="cb63-73"><a href="#cb63-73" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Mantém **histórico de comandos** e **ambiente** isolados</span>
+<span id="cb63-74"><a href="#cb63-74" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Facilita **controle de versão** (Git/GitHub)</span>
+<span id="cb63-75"><a href="#cb63-75" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Garante **reprodutibilidade**</span>
+<span id="cb63-76"><a href="#cb63-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-77"><a href="#cb63-77" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Criando seu primeiro projeto</span></span>
+<span id="cb63-78"><a href="#cb63-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-79"><a href="#cb63-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{r criar-projeto, eval=FALSE}</span></span>
+<span id="cb63-80"><a href="#cb63-80" aria-hidden="true" tabindex="-1"></a><span class="co"># ATENÇÃO: Execute isto APENAS UMA VEZ, fora deste documento!</span></span>
+<span id="cb63-81"><a href="#cb63-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Isso criará uma nova pasta e abrirá uma nova sessão do RStudio</span></span>
+<span id="cb63-82"><a href="#cb63-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-83"><a href="#cb63-83" aria-hidden="true" tabindex="-1"></a><span class="co"># usethis::create_project("meu_projeto_fs")</span></span>
+<span id="cb63-84"><a href="#cb63-84" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-85"><a href="#cb63-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-86"><a href="#cb63-86" aria-hidden="true" tabindex="-1"></a><span class="fu">#### O que acontece ao criar um projeto?</span></span>
+<span id="cb63-87"><a href="#cb63-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-88"><a href="#cb63-88" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Cria uma pasta com o nome especificado</span>
+<span id="cb63-89"><a href="#cb63-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-90"><a href="#cb63-90" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Gera um arquivo <span class="in">`.Rproj`</span></span>
+<span id="cb63-91"><a href="#cb63-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-92"><a href="#cb63-92" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Cria <span class="in">`.gitignore`</span> (para controle de versão)</span>
+<span id="cb63-93"><a href="#cb63-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-94"><a href="#cb63-94" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Abre uma **nova sessão** do RStudio no projeto</span>
+<span id="cb63-95"><a href="#cb63-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-96"><a href="#cb63-96" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Outras funções úteis do {usethis}</span></span>
+<span id="cb63-97"><a href="#cb63-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-98"><a href="#cb63-98" aria-hidden="true" tabindex="-1"></a><span class="in">```{r usethis-extras, eval=FALSE}</span></span>
+<span id="cb63-99"><a href="#cb63-99" aria-hidden="true" tabindex="-1"></a><span class="co"># Inicializar Git no projeto</span></span>
+<span id="cb63-100"><a href="#cb63-100" aria-hidden="true" tabindex="-1"></a><span class="fu">use_git</span>()</span>
+<span id="cb63-101"><a href="#cb63-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-102"><a href="#cb63-102" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar repositório no GitHub</span></span>
+<span id="cb63-103"><a href="#cb63-103" aria-hidden="true" tabindex="-1"></a><span class="fu">use_github</span>()</span>
+<span id="cb63-104"><a href="#cb63-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-105"><a href="#cb63-105" aria-hidden="true" tabindex="-1"></a><span class="co"># Adicionar arquivo README</span></span>
+<span id="cb63-106"><a href="#cb63-106" aria-hidden="true" tabindex="-1"></a><span class="fu">use_readme_md</span>()</span>
+<span id="cb63-107"><a href="#cb63-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-108"><a href="#cb63-108" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar arquivo de licença</span></span>
+<span id="cb63-109"><a href="#cb63-109" aria-hidden="true" tabindex="-1"></a><span class="fu">use_mit_license</span>(<span class="st">"Jennifer Lopes"</span>)</span>
+<span id="cb63-110"><a href="#cb63-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-111"><a href="#cb63-111" aria-hidden="true" tabindex="-1"></a><span class="co"># Adicionar pacote ao DESCRIPTION</span></span>
+<span id="cb63-112"><a href="#cb63-112" aria-hidden="true" tabindex="-1"></a><span class="fu">use_package</span>(<span class="st">"fs"</span>, <span class="st">"usethis"</span>, <span class="st">"here"</span>)</span>
+<span id="cb63-113"><a href="#cb63-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-114"><a href="#cb63-114" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar arquivo .gitignore personalizado</span></span>
+<span id="cb63-115"><a href="#cb63-115" aria-hidden="true" tabindex="-1"></a><span class="fu">use_git_ignore</span>(<span class="fu">c</span>(<span class="st">"*.log"</span>, <span class="st">"*.tmp"</span>, <span class="st">"dados_sensiveis/"</span>))</span>
+<span id="cb63-116"><a href="#cb63-116" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-117"><a href="#cb63-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-118"><a href="#cb63-118" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Dica Importante</span></span>
+<span id="cb63-119"><a href="#cb63-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-120"><a href="#cb63-120" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Sempre trabalhe dentro de **projetos R** (.Rproj). Isso elimina a necessidade de usar </span><span class="in">`setwd()`</span><span class="at"> e garante que seus caminhos sejam relativos!</span></span>
+<span id="cb63-121"><a href="#cb63-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-122"><a href="#cb63-122" aria-hidden="true" tabindex="-1"></a><span class="fu">### Navegação com {here}</span></span>
+<span id="cb63-123"><a href="#cb63-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-124"><a href="#cb63-124" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Por que usar {here}?</span></span>
+<span id="cb63-125"><a href="#cb63-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-126"><a href="#cb63-126" aria-hidden="true" tabindex="-1"></a>O pacote <span class="in">`{here}`</span> resolve o problema de **caminhos relativos** de forma inteligente:</span>
+<span id="cb63-127"><a href="#cb63-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-128"><a href="#cb63-128" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Multiplataforma** (funciona em Windows, Mac, Linux)</span>
+<span id="cb63-129"><a href="#cb63-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-130"><a href="#cb63-130" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Portável** (código funciona em qualquer computador)</span>
+<span id="cb63-131"><a href="#cb63-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-132"><a href="#cb63-132" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Inteligente** (detecta automaticamente a raiz do projeto)</span>
+<span id="cb63-133"><a href="#cb63-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-134"><a href="#cb63-134" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Encontrando a raiz do projeto</span></span>
+<span id="cb63-135"><a href="#cb63-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-136"><a href="#cb63-136" aria-hidden="true" tabindex="-1"></a><span class="in">```{r here-basico}</span></span>
+<span id="cb63-137"><a href="#cb63-137" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostra o diretório raiz do projeto</span></span>
+<span id="cb63-138"><a href="#cb63-138" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>()</span>
+<span id="cb63-139"><a href="#cb63-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-140"><a href="#cb63-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-141"><a href="#cb63-141" aria-hidden="true" tabindex="-1"></a>O <span class="in">`{here}`</span> procura por:</span>
+<span id="cb63-142"><a href="#cb63-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-143"><a href="#cb63-143" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Arquivo <span class="in">`.Rproj`</span></span>
+<span id="cb63-144"><a href="#cb63-144" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Arquivo <span class="in">`.here`</span></span>
+<span id="cb63-145"><a href="#cb63-145" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Pasta <span class="in">`.git`</span></span>
+<span id="cb63-146"><a href="#cb63-146" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Arquivo <span class="in">`DESCRIPTION`</span></span>
+<span id="cb63-147"><a href="#cb63-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-148"><a href="#cb63-148" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Construindo caminhos relativos</span></span>
+<span id="cb63-149"><a href="#cb63-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-150"><a href="#cb63-150" aria-hidden="true" tabindex="-1"></a><span class="in">```{r here-caminhos}</span></span>
+<span id="cb63-151"><a href="#cb63-151" aria-hidden="true" tabindex="-1"></a><span class="co"># Caminho para pasta 'data'</span></span>
+<span id="cb63-152"><a href="#cb63-152" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>(<span class="st">"data"</span>)</span>
+<span id="cb63-153"><a href="#cb63-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-154"><a href="#cb63-154" aria-hidden="true" tabindex="-1"></a><span class="co"># Caminho para arquivo específico</span></span>
+<span id="cb63-155"><a href="#cb63-155" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"dados.csv"</span>)</span>
+<span id="cb63-156"><a href="#cb63-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-157"><a href="#cb63-157" aria-hidden="true" tabindex="-1"></a><span class="co"># Caminho para script</span></span>
+<span id="cb63-158"><a href="#cb63-158" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"analise.R"</span>)</span>
+<span id="cb63-159"><a href="#cb63-159" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-160"><a href="#cb63-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-161"><a href="#cb63-161" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Evite isso:</span></span>
+<span id="cb63-162"><a href="#cb63-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-163"><a href="#cb63-163" aria-hidden="true" tabindex="-1"></a><span class="in">```{r evitar, eval=FALSE}</span></span>
+<span id="cb63-164"><a href="#cb63-164" aria-hidden="true" tabindex="-1"></a><span class="co"># NÃO FAÇA:</span></span>
+<span id="cb63-165"><a href="#cb63-165" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"C:/Users/MeuNome/Documents/projeto"</span>)  <span class="co"># Não funciona em outros PCs</span></span>
+<span id="cb63-166"><a href="#cb63-166" aria-hidden="true" tabindex="-1"></a><span class="fu">read.csv</span>(<span class="st">"../data/arquivo.csv"</span>)  <span class="co"># Caminho frágil</span></span>
+<span id="cb63-167"><a href="#cb63-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-168"><a href="#cb63-168" aria-hidden="true" tabindex="-1"></a><span class="co"># FAÇA:</span></span>
+<span id="cb63-169"><a href="#cb63-169" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb63-170"><a href="#cb63-170" aria-hidden="true" tabindex="-1"></a><span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.csv"</span>))  <span class="co"># Sempre funciona!</span></span>
+<span id="cb63-171"><a href="#cb63-171" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-172"><a href="#cb63-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-173"><a href="#cb63-173" aria-hidden="true" tabindex="-1"></a><span class="fu">### Manipulação de Arquivos com {fs}</span></span>
+<span id="cb63-174"><a href="#cb63-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-175"><a href="#cb63-175" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Por que usar {fs} em vez de funções base?</span></span>
+<span id="cb63-176"><a href="#cb63-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-177"><a href="#cb63-177" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Característica    <span class="pp">|</span> {fs}                     <span class="pp">|</span> Funções base      <span class="pp">|</span></span>
+<span id="cb63-178"><a href="#cb63-178" aria-hidden="true" tabindex="-1"></a><span class="pp">|-------------------|--------------------------|-------------------|</span></span>
+<span id="cb63-179"><a href="#cb63-179" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sintaxe           <span class="pp">|</span> Consistente e clara      <span class="pp">|</span> Variada e confusa <span class="pp">|</span></span>
+<span id="cb63-180"><a href="#cb63-180" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Multiplataforma   <span class="pp">|</span> <span class="sc">\-</span> Sim                   <span class="pp">|</span> <span class="sc">\-</span> Limitado       <span class="pp">|</span></span>
+<span id="cb63-181"><a href="#cb63-181" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Mensagens de erro <span class="pp">|</span> Claras e informativas    <span class="pp">|</span> Obscuras          <span class="pp">|</span></span>
+<span id="cb63-182"><a href="#cb63-182" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Retorno           <span class="pp">|</span> Tibbles estruturados     <span class="pp">|</span> Vetores simples   <span class="pp">|</span></span>
+<span id="cb63-183"><a href="#cb63-183" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Segurança         <span class="pp">|</span> Verificações automáticas <span class="pp">|</span> Manual            <span class="pp">|</span></span>
+<span id="cb63-184"><a href="#cb63-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-185"><a href="#cb63-185" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Criando a estrutura do projeto</span></span>
+<span id="cb63-186"><a href="#cb63-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-187"><a href="#cb63-187" aria-hidden="true" tabindex="-1"></a><span class="in">```{r criar-estrutura}</span></span>
+<span id="cb63-188"><a href="#cb63-188" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar diretórios principais</span></span>
+<span id="cb63-189"><a href="#cb63-189" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>))</span>
+<span id="cb63-190"><a href="#cb63-190" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>))      <span class="co"># Dados brutos (nunca modificar!</span></span>
+<span id="cb63-191"><a href="#cb63-191" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"clean"</span>))    <span class="co"># Dados limpos/processados</span></span>
+<span id="cb63-192"><a href="#cb63-192" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>))          <span class="co"># Scripts R</span></span>
+<span id="cb63-193"><a href="#cb63-193" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"outputs"</span>))          <span class="co"># Resultados/tabelas</span></span>
+<span id="cb63-194"><a href="#cb63-194" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"figures"</span>))          <span class="co"># Gráficos</span></span>
+<span id="cb63-195"><a href="#cb63-195" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"reports"</span>))          <span class="co"># Relatórios</span></span>
+<span id="cb63-196"><a href="#cb63-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-197"><a href="#cb63-197" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizar estrutura criada</span></span>
+<span id="cb63-198"><a href="#cb63-198" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_tree</span>(<span class="fu">here</span>())</span>
+<span id="cb63-199"><a href="#cb63-199" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-200"><a href="#cb63-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-201"><a href="#cb63-201" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Estrutura de Pastas Recomendada</span></span>
+<span id="cb63-202"><a href="#cb63-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-203"><a href="#cb63-203" aria-hidden="true" tabindex="-1"></a><span class="in">```         </span></span>
+<span id="cb63-204"><a href="#cb63-204" aria-hidden="true" tabindex="-1"></a><span class="in">meu_projeto/</span></span>
+<span id="cb63-205"><a href="#cb63-205" aria-hidden="true" tabindex="-1"></a><span class="in">├── data/</span></span>
+<span id="cb63-206"><a href="#cb63-206" aria-hidden="true" tabindex="-1"></a><span class="in">│   ├── raw/          # Dados originais (somente leitura)</span></span>
+<span id="cb63-207"><a href="#cb63-207" aria-hidden="true" tabindex="-1"></a><span class="in">│   └── clean/        # Dados processados</span></span>
+<span id="cb63-208"><a href="#cb63-208" aria-hidden="true" tabindex="-1"></a><span class="in">├── scripts/          # Código R (.R)</span></span>
+<span id="cb63-209"><a href="#cb63-209" aria-hidden="true" tabindex="-1"></a><span class="in">├── reports/          # Relatórios (.Rmd, .qmd)</span></span>
+<span id="cb63-210"><a href="#cb63-210" aria-hidden="true" tabindex="-1"></a><span class="in">├── outputs/          # Tabelas, resultados</span></span>
+<span id="cb63-211"><a href="#cb63-211" aria-hidden="true" tabindex="-1"></a><span class="in">├── figures/          # Gráficos (PNG, PDF)</span></span>
+<span id="cb63-212"><a href="#cb63-212" aria-hidden="true" tabindex="-1"></a><span class="in">└── README.md         # Documentação do projeto</span></span>
+<span id="cb63-213"><a href="#cb63-213" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-214"><a href="#cb63-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-215"><a href="#cb63-215" aria-hidden="true" tabindex="-1"></a><span class="fu">### Operações com Arquivos</span></span>
+<span id="cb63-216"><a href="#cb63-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-217"><a href="#cb63-217" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Criar arquivos</span></span>
+<span id="cb63-218"><a href="#cb63-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-219"><a href="#cb63-219" aria-hidden="true" tabindex="-1"></a><span class="in">```{r criar-arquivos}</span></span>
+<span id="cb63-220"><a href="#cb63-220" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar arquivo vazio</span></span>
+<span id="cb63-221"><a href="#cb63-221" aria-hidden="true" tabindex="-1"></a><span class="fu">file_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>))</span>
+<span id="cb63-222"><a href="#cb63-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-223"><a href="#cb63-223" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar múltiplos arquivos</span></span>
+<span id="cb63-224"><a href="#cb63-224" aria-hidden="true" tabindex="-1"></a><span class="fu">file_create</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="fu">c</span>(<span class="st">"01-import.R"</span>, <span class="st">"02-clean.R"</span>, <span class="st">"03-analyze.R"</span>)))</span>
+<span id="cb63-225"><a href="#cb63-225" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-226"><a href="#cb63-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-227"><a href="#cb63-227" aria-hidden="true" tabindex="-1"></a>**Quando usar:** Para inicializar arquivos que serão preenchidos depois.</span>
+<span id="cb63-228"><a href="#cb63-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-229"><a href="#cb63-229" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Copiar arquivos e diretórios</span></span>
+<span id="cb63-230"><a href="#cb63-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-231"><a href="#cb63-231" aria-hidden="true" tabindex="-1"></a><span class="in">```{r copiar}</span></span>
+<span id="cb63-232"><a href="#cb63-232" aria-hidden="true" tabindex="-1"></a><span class="co"># Copiar arquivo</span></span>
+<span id="cb63-233"><a href="#cb63-233" aria-hidden="true" tabindex="-1"></a><span class="fu">file_copy</span>(</span>
+<span id="cb63-234"><a href="#cb63-234" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>),</span>
+<span id="cb63-235"><a href="#cb63-235" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo_backup.txt"</span>),</span>
+<span id="cb63-236"><a href="#cb63-236" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span>  <span class="co"># Sobrescrever se já existir</span></span>
+<span id="cb63-237"><a href="#cb63-237" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb63-238"><a href="#cb63-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-239"><a href="#cb63-239" aria-hidden="true" tabindex="-1"></a><span class="co"># Copiar diretório inteiro</span></span>
+<span id="cb63-240"><a href="#cb63-240" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_copy</span>(</span>
+<span id="cb63-241"><a href="#cb63-241" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>),</span>
+<span id="cb63-242"><a href="#cb63-242" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw_backup"</span>)</span>
+<span id="cb63-243"><a href="#cb63-243" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb63-244"><a href="#cb63-244" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-245"><a href="#cb63-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-246"><a href="#cb63-246" aria-hidden="true" tabindex="-1"></a>**Quando usar:** Para criar backups ou duplicar estruturas.</span>
+<span id="cb63-247"><a href="#cb63-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-248"><a href="#cb63-248" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Mover e renomear</span></span>
+<span id="cb63-249"><a href="#cb63-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-250"><a href="#cb63-250" aria-hidden="true" tabindex="-1"></a><span class="in">```{r mover}</span></span>
+<span id="cb63-251"><a href="#cb63-251" aria-hidden="true" tabindex="-1"></a><span class="co"># Mover arquivo (= renomear)</span></span>
+<span id="cb63-252"><a href="#cb63-252" aria-hidden="true" tabindex="-1"></a><span class="fu">file_move</span>(</span>
+<span id="cb63-253"><a href="#cb63-253" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo_backup.txt"</span>),</span>
+<span id="cb63-254"><a href="#cb63-254" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo_renomeado.txt"</span>)</span>
+<span id="cb63-255"><a href="#cb63-255" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb63-256"><a href="#cb63-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-257"><a href="#cb63-257" aria-hidden="true" tabindex="-1"></a><span class="co"># Mover para outra pasta</span></span>
+<span id="cb63-258"><a href="#cb63-258" aria-hidden="true" tabindex="-1"></a><span class="fu">file_move</span>(</span>
+<span id="cb63-259"><a href="#cb63-259" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo_renomeado.txt"</span>),</span>
+<span id="cb63-260"><a href="#cb63-260" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_path =</span> <span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"arquivo_renomeado.txt"</span>)</span>
+<span id="cb63-261"><a href="#cb63-261" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb63-262"><a href="#cb63-262" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-263"><a href="#cb63-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-264"><a href="#cb63-264" aria-hidden="true" tabindex="-1"></a>**Nota:** <span class="in">`file_move()`</span> serve tanto para mover quanto para renomear!</span>
+<span id="cb63-265"><a href="#cb63-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-266"><a href="#cb63-266" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Listar arquivos e diretórios</span></span>
+<span id="cb63-267"><a href="#cb63-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-268"><a href="#cb63-268" aria-hidden="true" tabindex="-1"></a><span class="in">```{r listar}</span></span>
+<span id="cb63-269"><a href="#cb63-269" aria-hidden="true" tabindex="-1"></a><span class="co"># Listar tudo na pasta 'data'</span></span>
+<span id="cb63-270"><a href="#cb63-270" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_ls</span>(<span class="fu">here</span>(<span class="st">"data"</span>))</span>
+<span id="cb63-271"><a href="#cb63-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-272"><a href="#cb63-272" aria-hidden="true" tabindex="-1"></a><span class="co"># Listar apenas arquivos .R</span></span>
+<span id="cb63-273"><a href="#cb63-273" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_ls</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>), <span class="at">glob =</span> <span class="st">"*.R"</span>)</span>
+<span id="cb63-274"><a href="#cb63-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-275"><a href="#cb63-275" aria-hidden="true" tabindex="-1"></a><span class="co"># Listar recursivamente (incluir subpastas)</span></span>
+<span id="cb63-276"><a href="#cb63-276" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_ls</span>(<span class="fu">here</span>(<span class="st">"data"</span>), <span class="at">recurse =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb63-277"><a href="#cb63-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-278"><a href="#cb63-278" aria-hidden="true" tabindex="-1"></a><span class="co"># Listar apenas diretórios</span></span>
+<span id="cb63-279"><a href="#cb63-279" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_ls</span>(<span class="fu">here</span>(), <span class="at">type =</span> <span class="st">"directory"</span>)</span>
+<span id="cb63-280"><a href="#cb63-280" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-281"><a href="#cb63-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-282"><a href="#cb63-282" aria-hidden="true" tabindex="-1"></a>**Quando usar:** Para verificar conteúdo, auditar arquivos ou criar pipelines.</span>
+<span id="cb63-283"><a href="#cb63-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-284"><a href="#cb63-284" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Obter informações detalhadas</span></span>
+<span id="cb63-285"><a href="#cb63-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-286"><a href="#cb63-286" aria-hidden="true" tabindex="-1"></a><span class="in">```{r info-arquivos}</span></span>
+<span id="cb63-287"><a href="#cb63-287" aria-hidden="true" tabindex="-1"></a><span class="co"># Informações de um arquivo</span></span>
+<span id="cb63-288"><a href="#cb63-288" aria-hidden="true" tabindex="-1"></a><span class="fu">file_info</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>))</span>
+<span id="cb63-289"><a href="#cb63-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-290"><a href="#cb63-290" aria-hidden="true" tabindex="-1"></a><span class="co"># Informações úteis específicas</span></span>
+<span id="cb63-291"><a href="#cb63-291" aria-hidden="true" tabindex="-1"></a><span class="fu">file_size</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>))      <span class="co"># Tamanho</span></span>
+<span id="cb63-292"><a href="#cb63-292" aria-hidden="true" tabindex="-1"></a><span class="fu">file_exists</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>))    <span class="co"># Existe?</span></span>
+<span id="cb63-293"><a href="#cb63-293" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-294"><a href="#cb63-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-295"><a href="#cb63-295" aria-hidden="true" tabindex="-1"></a>**Retorna:** Tibble com tamanho, permissões, datas de modificação, etc.</span>
+<span id="cb63-296"><a href="#cb63-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-297"><a href="#cb63-297" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Deletar arquivos e diretórios</span></span>
+<span id="cb63-298"><a href="#cb63-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-299"><a href="#cb63-299" aria-hidden="true" tabindex="-1"></a><span class="in">```{r deletar}</span></span>
+<span id="cb63-300"><a href="#cb63-300" aria-hidden="true" tabindex="-1"></a><span class="co"># Deletar arquivo</span></span>
+<span id="cb63-301"><a href="#cb63-301" aria-hidden="true" tabindex="-1"></a><span class="fu">file_delete</span>(<span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"arquivo_renomeado.txt"</span>))</span>
+<span id="cb63-302"><a href="#cb63-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-303"><a href="#cb63-303" aria-hidden="true" tabindex="-1"></a><span class="co"># Deletar diretório vazio</span></span>
+<span id="cb63-304"><a href="#cb63-304" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_delete</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw_backup"</span>))</span>
+<span id="cb63-305"><a href="#cb63-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-306"><a href="#cb63-306" aria-hidden="true" tabindex="-1"></a><span class="co"># CUIDADO: Deletar diretório com conteúdo</span></span>
+<span id="cb63-307"><a href="#cb63-307" aria-hidden="true" tabindex="-1"></a><span class="co"># dir_delete(here("data"), recurse = TRUE)  # Use com cautela!</span></span>
+<span id="cb63-308"><a href="#cb63-308" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-309"><a href="#cb63-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-310"><a href="#cb63-310" aria-hidden="true" tabindex="-1"></a>**ATENÇÃO:** `file_delete()` e `dir_delete()` são **permanentes** (não vão para lixeira)!</span>
+<span id="cb63-311"><a href="#cb63-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-312"><a href="#cb63-312" aria-hidden="true" tabindex="-1"></a><span class="fu">### Manipulação de Caminhos</span></span>
+<span id="cb63-313"><a href="#cb63-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-314"><a href="#cb63-314" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Construir caminhos de forma segura</span></span>
+<span id="cb63-315"><a href="#cb63-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-316"><a href="#cb63-316" aria-hidden="true" tabindex="-1"></a><span class="in">```{r caminhos}</span></span>
+<span id="cb63-317"><a href="#cb63-317" aria-hidden="true" tabindex="-1"></a><span class="co"># Construir caminho (alternativa ao here)</span></span>
+<span id="cb63-318"><a href="#cb63-318" aria-hidden="true" tabindex="-1"></a><span class="fu">path</span>(<span class="st">"pasta"</span>, <span class="st">"subpasta"</span>, <span class="st">"arquivo.csv"</span>)</span>
+<span id="cb63-319"><a href="#cb63-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-320"><a href="#cb63-320" aria-hidden="true" tabindex="-1"></a><span class="co"># Combina caminhos corretamente em qualquer SO</span></span>
+<span id="cb63-321"><a href="#cb63-321" aria-hidden="true" tabindex="-1"></a><span class="fu">path</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"dados.xlsx"</span>)</span>
+<span id="cb63-322"><a href="#cb63-322" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-323"><a href="#cb63-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-324"><a href="#cb63-324" aria-hidden="true" tabindex="-1"></a>**Por que usar:** Funciona em Windows (<span class="in">`\`</span>), Mac/Linux (<span class="in">`/`</span>) automaticamente.</span>
+<span id="cb63-325"><a href="#cb63-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-326"><a href="#cb63-326" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Trabalhar com extensões</span></span>
+<span id="cb63-327"><a href="#cb63-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-328"><a href="#cb63-328" aria-hidden="true" tabindex="-1"></a><span class="in">```{r extensoes}</span></span>
+<span id="cb63-329"><a href="#cb63-329" aria-hidden="true" tabindex="-1"></a><span class="co"># Extrair extensão</span></span>
+<span id="cb63-330"><a href="#cb63-330" aria-hidden="true" tabindex="-1"></a><span class="fu">path_ext</span>(<span class="st">"relatorio.docx"</span>)</span>
+<span id="cb63-331"><a href="#cb63-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-332"><a href="#cb63-332" aria-hidden="true" tabindex="-1"></a><span class="co"># Mudar extensão</span></span>
+<span id="cb63-333"><a href="#cb63-333" aria-hidden="true" tabindex="-1"></a><span class="fu">path_ext_set</span>(<span class="st">"relatorio.docx"</span>, <span class="st">"pdf"</span>)</span>
+<span id="cb63-334"><a href="#cb63-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-335"><a href="#cb63-335" aria-hidden="true" tabindex="-1"></a><span class="co"># Remover extensão</span></span>
+<span id="cb63-336"><a href="#cb63-336" aria-hidden="true" tabindex="-1"></a><span class="fu">path_ext_remove</span>(<span class="st">"analise.R"</span>)</span>
+<span id="cb63-337"><a href="#cb63-337" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-338"><a href="#cb63-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-339"><a href="#cb63-339" aria-hidden="true" tabindex="-1"></a>**Útil para:** Converter formatos, validar tipos de arquivo.</span>
+<span id="cb63-340"><a href="#cb63-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-341"><a href="#cb63-341" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Caminhos absolutos vs relativos</span></span>
+<span id="cb63-342"><a href="#cb63-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-343"><a href="#cb63-343" aria-hidden="true" tabindex="-1"></a><span class="in">```{r abs-rel}</span></span>
+<span id="cb63-344"><a href="#cb63-344" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformar em caminho absoluto</span></span>
+<span id="cb63-345"><a href="#cb63-345" aria-hidden="true" tabindex="-1"></a><span class="fu">path_abs</span>(<span class="st">"data/arquivo.txt"</span>)</span>
+<span id="cb63-346"><a href="#cb63-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-347"><a href="#cb63-347" aria-hidden="true" tabindex="-1"></a><span class="co"># Obter caminho relativo</span></span>
+<span id="cb63-348"><a href="#cb63-348" aria-hidden="true" tabindex="-1"></a><span class="fu">path_rel</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>), <span class="at">start =</span> <span class="fu">here</span>())</span>
+<span id="cb63-349"><a href="#cb63-349" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-350"><a href="#cb63-350" aria-hidden="true" tabindex="-1"></a><span class="co"># Nome do arquivo (sem caminho)</span></span>
+<span id="cb63-351"><a href="#cb63-351" aria-hidden="true" tabindex="-1"></a><span class="fu">path_file</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>))</span>
+<span id="cb63-352"><a href="#cb63-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-353"><a href="#cb63-353" aria-hidden="true" tabindex="-1"></a><span class="co"># Diretório pai</span></span>
+<span id="cb63-354"><a href="#cb63-354" aria-hidden="true" tabindex="-1"></a><span class="fu">path_dir</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>))</span>
+<span id="cb63-355"><a href="#cb63-355" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-356"><a href="#cb63-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-357"><a href="#cb63-357" aria-hidden="true" tabindex="-1"></a><span class="fu">### Links simbólicos</span></span>
+<span id="cb63-358"><a href="#cb63-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-359"><a href="#cb63-359" aria-hidden="true" tabindex="-1"></a><span class="fu">#### O que são links simbólicos?</span></span>
+<span id="cb63-360"><a href="#cb63-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-361"><a href="#cb63-361" aria-hidden="true" tabindex="-1"></a>**Links simbólicos** são "atalhos" que apontam para outro arquivo/pasta sem duplicar dados.</span>
+<span id="cb63-362"><a href="#cb63-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-363"><a href="#cb63-363" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Criar e gerenciar links</span></span>
+<span id="cb63-364"><a href="#cb63-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-365"><a href="#cb63-365" aria-hidden="true" tabindex="-1"></a><span class="in">```{r links, eval=FALSE}</span></span>
+<span id="cb63-366"><a href="#cb63-366" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar link simbólico</span></span>
+<span id="cb63-367"><a href="#cb63-367" aria-hidden="true" tabindex="-1"></a><span class="fu">link_create</span>(</span>
+<span id="cb63-368"><a href="#cb63-368" aria-hidden="true" tabindex="-1"></a>  <span class="at">path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.txt"</span>),</span>
+<span id="cb63-369"><a href="#cb63-369" aria-hidden="true" tabindex="-1"></a>  <span class="at">new_path =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"atalho_link"</span>))</span>
+<span id="cb63-370"><a href="#cb63-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-371"><a href="#cb63-371" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificar para onde o link aponta</span></span>
+<span id="cb63-372"><a href="#cb63-372" aria-hidden="true" tabindex="-1"></a><span class="fu">link_path</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"atalho_link"</span>))</span>
+<span id="cb63-373"><a href="#cb63-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-374"><a href="#cb63-374" aria-hidden="true" tabindex="-1"></a><span class="co"># Deletar link (não deleta arquivo original)</span></span>
+<span id="cb63-375"><a href="#cb63-375" aria-hidden="true" tabindex="-1"></a><span class="fu">link_delete</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"atalho_link"</span>))</span>
+<span id="cb63-376"><a href="#cb63-376" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-377"><a href="#cb63-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-378"><a href="#cb63-378" aria-hidden="true" tabindex="-1"></a>**Quando usar:** Para acessar arquivos em múltiplos locais sem duplicar espaço.</span>
+<span id="cb63-379"><a href="#cb63-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-380"><a href="#cb63-380" aria-hidden="true" tabindex="-1"></a><span class="fu">### Arquivos Temporários</span></span>
+<span id="cb63-381"><a href="#cb63-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-382"><a href="#cb63-382" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Por que usar arquivos temporários?</span></span>
+<span id="cb63-383"><a href="#cb63-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-384"><a href="#cb63-384" aria-hidden="true" tabindex="-1"></a>Arquivos temporários são úteis para:</span>
+<span id="cb63-385"><a href="#cb63-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-386"><a href="#cb63-386" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Armazenar dados intermediários</span>
+<span id="cb63-387"><a href="#cb63-387" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Testes</span>
+<span id="cb63-388"><a href="#cb63-388" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Limpeza automática após sessão</span>
+<span id="cb63-389"><a href="#cb63-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-390"><a href="#cb63-390" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Criar arquivos temporários</span></span>
+<span id="cb63-391"><a href="#cb63-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-392"><a href="#cb63-392" aria-hidden="true" tabindex="-1"></a><span class="in">```{r temp}</span></span>
+<span id="cb63-393"><a href="#cb63-393" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar arquivo temporário</span></span>
+<span id="cb63-394"><a href="#cb63-394" aria-hidden="true" tabindex="-1"></a>arquivo_temp <span class="ot">&lt;-</span> <span class="fu">file_temp</span>(<span class="at">ext =</span> <span class="st">".csv"</span>)</span>
+<span id="cb63-395"><a href="#cb63-395" aria-hidden="true" tabindex="-1"></a>arquivo_temp</span>
+<span id="cb63-396"><a href="#cb63-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-397"><a href="#cb63-397" aria-hidden="true" tabindex="-1"></a><span class="co"># Caminho do diretório temporário</span></span>
+<span id="cb63-398"><a href="#cb63-398" aria-hidden="true" tabindex="-1"></a><span class="fu">path_temp</span>()</span>
+<span id="cb63-399"><a href="#cb63-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-400"><a href="#cb63-400" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar arquivo temporário com nome específico</span></span>
+<span id="cb63-401"><a href="#cb63-401" aria-hidden="true" tabindex="-1"></a><span class="fu">file_temp</span>(<span class="st">"meus_dados"</span>, <span class="at">ext =</span> <span class="st">".rds"</span>)</span>
+<span id="cb63-402"><a href="#cb63-402" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-403"><a href="#cb63-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-404"><a href="#cb63-404" aria-hidden="true" tabindex="-1"></a>**Vantagem:** Sistema operacional limpa automaticamente arquivos temporários.</span>
+<span id="cb63-405"><a href="#cb63-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-406"><a href="#cb63-406" aria-hidden="true" tabindex="-1"></a><span class="fu">### Exemplo</span></span>
+<span id="cb63-407"><a href="#cb63-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-408"><a href="#cb63-408" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Cenário: Projeto de análise de dados</span></span>
+<span id="cb63-409"><a href="#cb63-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-410"><a href="#cb63-410" aria-hidden="true" tabindex="-1"></a>Vamos criar um projeto completo do zero:</span>
+<span id="cb63-411"><a href="#cb63-411" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-412"><a href="#cb63-412" aria-hidden="true" tabindex="-1"></a><span class="in">```{r exemplo-completo}</span></span>
+<span id="cb63-413"><a href="#cb63-413" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Criar estrutura de pastas</span></span>
+<span id="cb63-414"><a href="#cb63-414" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>))</span>
+<span id="cb63-415"><a href="#cb63-415" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"clean"</span>))</span>
+<span id="cb63-416"><a href="#cb63-416" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>))</span>
+<span id="cb63-417"><a href="#cb63-417" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"outputs"</span>))</span>
+<span id="cb63-418"><a href="#cb63-418" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"figures"</span>))</span>
+<span id="cb63-419"><a href="#cb63-419" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"reports"</span>))</span>
+<span id="cb63-420"><a href="#cb63-420" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-421"><a href="#cb63-421" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Criar scripts de análise</span></span>
+<span id="cb63-422"><a href="#cb63-422" aria-hidden="true" tabindex="-1"></a>scripts <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb63-423"><a href="#cb63-423" aria-hidden="true" tabindex="-1"></a>  <span class="st">"01-import-data.R"</span>,</span>
+<span id="cb63-424"><a href="#cb63-424" aria-hidden="true" tabindex="-1"></a>  <span class="st">"02-clean-data.R"</span>,</span>
+<span id="cb63-425"><a href="#cb63-425" aria-hidden="true" tabindex="-1"></a>  <span class="st">"03-exploratory-analysis.R"</span>,</span>
+<span id="cb63-426"><a href="#cb63-426" aria-hidden="true" tabindex="-1"></a>  <span class="st">"04-modeling.R"</span>,</span>
+<span id="cb63-427"><a href="#cb63-427" aria-hidden="true" tabindex="-1"></a>  <span class="st">"05-visualization.R"</span></span>
+<span id="cb63-428"><a href="#cb63-428" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb63-429"><a href="#cb63-429" aria-hidden="true" tabindex="-1"></a><span class="fu">file_create</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, scripts))</span>
+<span id="cb63-430"><a href="#cb63-430" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-431"><a href="#cb63-431" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Criar arquivo README</span></span>
+<span id="cb63-432"><a href="#cb63-432" aria-hidden="true" tabindex="-1"></a><span class="fu">file_create</span>(<span class="fu">here</span>(<span class="st">"README.md"</span>))</span>
+<span id="cb63-433"><a href="#cb63-433" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-434"><a href="#cb63-434" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Visualizar estrutura final</span></span>
+<span id="cb63-435"><a href="#cb63-435" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_tree</span>(<span class="fu">here</span>(), <span class="at">recurse =</span> <span class="dv">1</span>)</span>
+<span id="cb63-436"><a href="#cb63-436" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-437"><a href="#cb63-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-438"><a href="#cb63-438" aria-hidden="true" tabindex="-1"></a><span class="fu">### Boas Práticas e Dicas</span></span>
+<span id="cb63-439"><a href="#cb63-439" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-440"><a href="#cb63-440" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Faça</span></span>
+<span id="cb63-441"><a href="#cb63-441" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-442"><a href="#cb63-442" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**Use projetos R** para todos os trabalhos</span>
+<span id="cb63-443"><a href="#cb63-443" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>**Sempre use `here()`** para caminhos</span>
+<span id="cb63-444"><a href="#cb63-444" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>**Documente** a estrutura no README</span>
+<span id="cb63-445"><a href="#cb63-445" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>**Nunca modifique** dados em <span class="in">`data/raw`</span></span>
+<span id="cb63-446"><a href="#cb63-446" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>**Use nomes descritivos** para arquivos e pastas</span>
+<span id="cb63-447"><a href="#cb63-447" aria-hidden="true" tabindex="-1"></a><span class="ss">6.  </span>**Versione** seu projeto com Git</span>
+<span id="cb63-448"><a href="#cb63-448" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-449"><a href="#cb63-449" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Evite</span></span>
+<span id="cb63-450"><a href="#cb63-450" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-451"><a href="#cb63-451" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span><span class="in">`setwd()`</span> - Nunca use!</span>
+<span id="cb63-452"><a href="#cb63-452" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-453"><a href="#cb63-453" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Caminhos absolutos - Não são portáveis</span>
+<span id="cb63-454"><a href="#cb63-454" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-455"><a href="#cb63-455" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Espaços em nomes - Use <span class="in">`_`</span> ou <span class="in">`-`</span></span>
+<span id="cb63-456"><a href="#cb63-456" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-457"><a href="#cb63-457" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Caracteres especiais - Evite acentos</span>
+<span id="cb63-458"><a href="#cb63-458" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-459"><a href="#cb63-459" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>Modificar dados originais - Mantenha em <span class="in">`raw/`</span></span>
+<span id="cb63-460"><a href="#cb63-460" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-461"><a href="#cb63-461" aria-hidden="true" tabindex="-1"></a><span class="fu">### Crie um **template de projeto** pessoal:</span></span>
+<span id="cb63-462"><a href="#cb63-462" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-463"><a href="#cb63-463" aria-hidden="true" tabindex="-1"></a><span class="in">```{r template, eval=FALSE}</span></span>
+<span id="cb63-464"><a href="#cb63-464" aria-hidden="true" tabindex="-1"></a><span class="co"># Salve este script como "setup_projeto.R"</span></span>
+<span id="cb63-465"><a href="#cb63-465" aria-hidden="true" tabindex="-1"></a>criar_projeto_padrao <span class="ot">&lt;-</span> <span class="cf">function</span>(nome) {</span>
+<span id="cb63-466"><a href="#cb63-466" aria-hidden="true" tabindex="-1"></a>  usethis<span class="sc">::</span><span class="fu">create_project</span>(nome)</span>
+<span id="cb63-467"><a href="#cb63-467" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb63-468"><a href="#cb63-468" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Estrutura de pastas</span></span>
+<span id="cb63-469"><a href="#cb63-469" aria-hidden="true" tabindex="-1"></a>  fs<span class="sc">::</span><span class="fu">dir_create</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="fu">c</span>(<span class="st">"raw"</span>, <span class="st">"clean"</span>)))</span>
+<span id="cb63-470"><a href="#cb63-470" aria-hidden="true" tabindex="-1"></a>  fs<span class="sc">::</span><span class="fu">dir_create</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="fu">c</span>(<span class="st">"scripts"</span>, <span class="st">"outputs"</span>, <span class="st">"figures"</span>, <span class="st">"reports"</span>)))</span>
+<span id="cb63-471"><a href="#cb63-471" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb63-472"><a href="#cb63-472" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Scripts básicos</span></span>
+<span id="cb63-473"><a href="#cb63-473" aria-hidden="true" tabindex="-1"></a>  fs<span class="sc">::</span><span class="fu">file_create</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="fu">c</span>(</span>
+<span id="cb63-474"><a href="#cb63-474" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01-import.R"</span>,</span>
+<span id="cb63-475"><a href="#cb63-475" aria-hidden="true" tabindex="-1"></a>    <span class="st">"02-clean.R"</span>, </span>
+<span id="cb63-476"><a href="#cb63-476" aria-hidden="true" tabindex="-1"></a>    <span class="st">"03-analyze.R"</span></span>
+<span id="cb63-477"><a href="#cb63-477" aria-hidden="true" tabindex="-1"></a>  )))</span>
+<span id="cb63-478"><a href="#cb63-478" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb63-479"><a href="#cb63-479" aria-hidden="true" tabindex="-1"></a>  <span class="co"># README</span></span>
+<span id="cb63-480"><a href="#cb63-480" aria-hidden="true" tabindex="-1"></a>  usethis<span class="sc">::</span><span class="fu">use_readme_md</span>()</span>
+<span id="cb63-481"><a href="#cb63-481" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb63-482"><a href="#cb63-482" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Git</span></span>
+<span id="cb63-483"><a href="#cb63-483" aria-hidden="true" tabindex="-1"></a>  usethis<span class="sc">::</span><span class="fu">use_git</span>()</span>
+<span id="cb63-484"><a href="#cb63-484" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb63-485"><a href="#cb63-485" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"- Projeto criado com sucesso!"</span>)</span>
+<span id="cb63-486"><a href="#cb63-486" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb63-487"><a href="#cb63-487" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-488"><a href="#cb63-488" aria-hidden="true" tabindex="-1"></a><span class="co"># Usar:</span></span>
+<span id="cb63-489"><a href="#cb63-489" aria-hidden="true" tabindex="-1"></a><span class="co"># criar_projeto_padrao("meu_novo_projeto")</span></span>
+<span id="cb63-490"><a href="#cb63-490" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-491"><a href="#cb63-491" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-492"><a href="#cb63-492" aria-hidden="true" tabindex="-1"></a><span class="fu">### Considerações</span></span>
+<span id="cb63-493"><a href="#cb63-493" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-494"><a href="#cb63-494" aria-hidden="true" tabindex="-1"></a>Você agora domina os **três pilares** da organização de projetos em R:</span>
+<span id="cb63-495"><a href="#cb63-495" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-496"><a href="#cb63-496" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Pacote        <span class="pp">|</span> Função Principal            <span class="pp">|</span> Quando Usar               <span class="pp">|</span></span>
+<span id="cb63-497"><a href="#cb63-497" aria-hidden="true" tabindex="-1"></a><span class="pp">|---------------|-----------------------------|---------------------------|</span></span>
+<span id="cb63-498"><a href="#cb63-498" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **{usethis}** <span class="pp">|</span> Criar e configurar projetos <span class="pp">|</span> Início do projeto         <span class="pp">|</span></span>
+<span id="cb63-499"><a href="#cb63-499" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **{fs}**      <span class="pp">|</span> Manipular arquivos/pastas   <span class="pp">|</span> Gerenciamento de arquivos <span class="pp">|</span></span>
+<span id="cb63-500"><a href="#cb63-500" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **{here}**    <span class="pp">|</span> Caminhos relativos seguros  <span class="pp">|</span> Sempre!                   <span class="pp">|</span></span>
+<span id="cb63-501"><a href="#cb63-501" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-502"><a href="#cb63-502" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Próximos passos</span></span>
+<span id="cb63-503"><a href="#cb63-503" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-504"><a href="#cb63-504" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Pratique criando projetos reais</span>
+<span id="cb63-505"><a href="#cb63-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-506"><a href="#cb63-506" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Integre com controle de versão (Git/GitHub)</span>
+<span id="cb63-507"><a href="#cb63-507" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-508"><a href="#cb63-508" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Explore outros pacotes: <span class="in">`{renv}`</span> (gerenciar dependências), <span class="in">`{targets}`</span> (pipelines)</span>
+<span id="cb63-509"><a href="#cb63-509" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-510"><a href="#cb63-510" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Documente sempre com README.md</span>
+<span id="cb63-511"><a href="#cb63-511" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-512"><a href="#cb63-512" aria-hidden="true" tabindex="-1"></a><span class="fu">### Referências e Links Úteis</span></span>
+<span id="cb63-513"><a href="#cb63-513" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-514"><a href="#cb63-514" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Documentação dos Pacotes</span></span>
+<span id="cb63-515"><a href="#cb63-515" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-516"><a href="#cb63-516" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**{usethis}**</span>
+<span id="cb63-517"><a href="#cb63-517" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="co">[</span><span class="ot">Site oficial</span><span class="co">](https://usethis.r-lib.org/)</span>\</span>
+<span id="cb63-518"><a href="#cb63-518" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="co">[</span><span class="ot">Documentação completa</span><span class="co">](https://usethis.r-lib.org/reference/index.html)</span>\</span>
+<span id="cb63-519"><a href="#cb63-519" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/r-lib/usethis)</span></span>
+<span id="cb63-520"><a href="#cb63-520" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**{fs}**</span>
+<span id="cb63-521"><a href="#cb63-521" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="co">[</span><span class="ot">Site oficial</span><span class="co">](https://fs.r-lib.org/)</span>\</span>
+<span id="cb63-522"><a href="#cb63-522" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="co">[</span><span class="ot">Documentação completa</span><span class="co">](https://fs.r-lib.org/reference/index.html)</span>\</span>
+<span id="cb63-523"><a href="#cb63-523" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/r-lib/fs)</span></span>
+<span id="cb63-524"><a href="#cb63-524" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**{here}**</span>
+<span id="cb63-525"><a href="#cb63-525" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="co">[</span><span class="ot">Site oficial</span><span class="co">](https://here.r-lib.org/)</span>\</span>
+<span id="cb63-526"><a href="#cb63-526" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="co">[</span><span class="ot">Documentação completa</span><span class="co">](https://here.r-lib.org/reference/index.html)</span>\</span>
+<span id="cb63-527"><a href="#cb63-527" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/r-lib/here)</span></span>
+<span id="cb63-528"><a href="#cb63-528" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-529"><a href="#cb63-529" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Artigo</span></span>
+<span id="cb63-530"><a href="#cb63-530" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-531"><a href="#cb63-531" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="co">[</span><span class="ot">R for Data Science - Workflow: projects</span><span class="co">](https://r4ds.hadley.nz/workflow-scripts.html#projects)</span>\</span>
+<span id="cb63-532"><a href="#cb63-532" aria-hidden="true" tabindex="-1"></a>    *Capítulo sobre organização de projetos*</span>
+<span id="cb63-533"><a href="#cb63-533" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-534"><a href="#cb63-534" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="co">[</span><span class="ot">RStudio Projects Tutorial</span><span class="co">](https://support.posit.co/hc/en-us/articles/200526207-Using-RStudio-Projects)</span>\</span>
+<span id="cb63-535"><a href="#cb63-535" aria-hidden="true" tabindex="-1"></a>    *Tutorial oficial da Posit*</span>
+<span id="cb63-536"><a href="#cb63-536" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-537"><a href="#cb63-537" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Ferramentas complementares</span></span>
+<span id="cb63-538"><a href="#cb63-538" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-539"><a href="#cb63-539" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**{renv}** - Gerenciamento de dependências\</span>
+<span id="cb63-540"><a href="#cb63-540" aria-hidden="true" tabindex="-1"></a>    <span class="ot">&lt;https://rstudio.github.io/renv/&gt;</span></span>
+<span id="cb63-541"><a href="#cb63-541" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-542"><a href="#cb63-542" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**{targets}** - Pipelines de análise\</span>
+<span id="cb63-543"><a href="#cb63-543" aria-hidden="true" tabindex="-1"></a>    <span class="ot">&lt;https://docs.ropensci.org/targets/&gt;</span></span>
+<span id="cb63-544"><a href="#cb63-544" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-545"><a href="#cb63-545" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Autor e contribuições</span></span>
+<span id="cb63-546"><a href="#cb63-546" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-547"><a href="#cb63-547" aria-hidden="true" tabindex="-1"></a>*Este documento foi criado como material educacional. Sinta-se livre para compartilhar e adaptar conforme necessário!*</span>
+<span id="cb63-548"><a href="#cb63-548" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-549"><a href="#cb63-549" aria-hidden="true" tabindex="-1"></a><span class="fu">### Apêndice: Cheatsheet Rápido</span></span>
+<span id="cb63-550"><a href="#cb63-550" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-551"><a href="#cb63-551" aria-hidden="true" tabindex="-1"></a><span class="in">```{r cheatsheet, eval=FALSE}</span></span>
+<span id="cb63-552"><a href="#cb63-552" aria-hidden="true" tabindex="-1"></a><span class="co"># CRIAR PROJETO</span></span>
+<span id="cb63-553"><a href="#cb63-553" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_project</span>(<span class="st">"nome_projeto"</span>)</span>
+<span id="cb63-554"><a href="#cb63-554" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-555"><a href="#cb63-555" aria-hidden="true" tabindex="-1"></a><span class="co"># ESTRUTURA</span></span>
+<span id="cb63-556"><a href="#cb63-556" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here); <span class="fu">library</span>(fs)</span>
+<span id="cb63-557"><a href="#cb63-557" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>))</span>
+<span id="cb63-558"><a href="#cb63-558" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>))</span>
+<span id="cb63-559"><a href="#cb63-559" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-560"><a href="#cb63-560" aria-hidden="true" tabindex="-1"></a><span class="co"># CAMINHOS</span></span>
+<span id="cb63-561"><a href="#cb63-561" aria-hidden="true" tabindex="-1"></a><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"arquivo.csv"</span>)  <span class="co"># Sempre use!</span></span>
+<span id="cb63-562"><a href="#cb63-562" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-563"><a href="#cb63-563" aria-hidden="true" tabindex="-1"></a><span class="co"># ARQUIVOS</span></span>
+<span id="cb63-564"><a href="#cb63-564" aria-hidden="true" tabindex="-1"></a><span class="fu">file_create</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"analise.R"</span>))</span>
+<span id="cb63-565"><a href="#cb63-565" aria-hidden="true" tabindex="-1"></a><span class="fu">file_copy</span>(origem, destino)</span>
+<span id="cb63-566"><a href="#cb63-566" aria-hidden="true" tabindex="-1"></a><span class="fu">file_move</span>(origem, destino)</span>
+<span id="cb63-567"><a href="#cb63-567" aria-hidden="true" tabindex="-1"></a><span class="fu">file_delete</span>(arquivo)</span>
+<span id="cb63-568"><a href="#cb63-568" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-569"><a href="#cb63-569" aria-hidden="true" tabindex="-1"></a><span class="co"># PASTAS</span></span>
+<span id="cb63-570"><a href="#cb63-570" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_create</span>(<span class="fu">here</span>(<span class="st">"nova_pasta"</span>))</span>
+<span id="cb63-571"><a href="#cb63-571" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_ls</span>(<span class="fu">here</span>(<span class="st">"data"</span>))</span>
+<span id="cb63-572"><a href="#cb63-572" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_tree</span>(<span class="fu">here</span>())</span>
+<span id="cb63-573"><a href="#cb63-573" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-574"><a href="#cb63-574" aria-hidden="true" tabindex="-1"></a><span class="co"># GIT</span></span>
+<span id="cb63-575"><a href="#cb63-575" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_git</span>()</span>
+<span id="cb63-576"><a href="#cb63-576" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_github</span>()</span>
+<span id="cb63-577"><a href="#cb63-577" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+<script src="pacote_fs_files/libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

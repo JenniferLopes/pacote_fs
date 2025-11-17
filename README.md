@@ -300,7 +300,7 @@ Este projeto está sob a licença MIT.
 
 ## Contato
 
-- **R-Ladies Goiânia**:[S]
+- **R-Ladies Goiânia**:[Site](https://www.rladiesgyn.com/)
 - **R-Ladies Goiânia**: [Meetup](https://www.meetup.com/rladies-goiania/) 
 
 

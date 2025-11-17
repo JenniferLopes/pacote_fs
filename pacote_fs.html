@@ -310,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#crie-um-template-de-projeto-pessoal" id="toc-crie-um-template-de-projeto-pessoal" class="nav-link" data-scroll-target="#crie-um-template-de-projeto-pessoal">Crie um <strong>template de projeto</strong> pessoal:</a></li>
   <li><a href="#considerações" id="toc-considerações" class="nav-link" data-scroll-target="#considerações">Considerações</a></li>
   <li><a href="#referências-e-links-úteis" id="toc-referências-e-links-úteis" class="nav-link" data-scroll-target="#referências-e-links-úteis">Referências e Links Úteis</a></li>
-  <li><a href="#apêndice-cheatsheet-rápido" id="toc-apêndice-cheatsheet-rápido" class="nav-link" data-scroll-target="#apêndice-cheatsheet-rápido">Apêndice: Cheatsheet Rápido</a></li>
+  <li><a href="#apêndice-cheatsheet" id="toc-apêndice-cheatsheet" class="nav-link" data-scroll-target="#apêndice-cheatsheet">Apêndice: Cheatsheet</a></li>
   </ul>
 </nav>
 </div>
@@ -538,26 +538,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>C:/Users/User/Documents/GitHub/automacao
 ├── data
+│   ├── arquivo.txt
 │   ├── clean
 │   └── raw
 ├── figures
 ├── footer.html
 ├── logo.png
 ├── outputs
+├── pacote_fs.html
 ├── pacote_fs.qmd
 ├── pacote_fs.rmarkdown
 ├── pacote_fs.Rproj
+├── pacote_fs_files
+│   └── libs
+│       ├── bootstrap
+│       │   ├── bootstrap-ba461ff7a8da32a117382727f331d949.min.css
+│       │   ├── bootstrap-dark-6690d7460971a03b54de4e4d4c2eb608.min.css
+│       │   ├── bootstrap-icons.css
+│       │   ├── bootstrap-icons.woff
+│       │   └── bootstrap.min.js
+│       ├── clipboard
+│       │   └── clipboard.min.js
+│       └── quarto-html
+│           ├── anchor.min.js
+│           ├── popper.min.js
+│           ├── quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css
+│           ├── quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css
+│           ├── quarto.js
+│           ├── tabsets
+│           │   └── tabsets.js
+│           ├── tippy.css
+│           ├── tippy.umd.min.js
+│           └── zenscroll-min.js
+├── README.html
 ├── README.md
 ├── reports
 ├── scripts
+│   ├── 01-import-data.R
+│   ├── 01-import.R
+│   ├── 02-clean-data.R
+│   ├── 02-clean.R
+│   ├── 03-analyze.R
+│   ├── 03-exploratory-analysis.R
+│   ├── 04-modeling.R
+│   └── 05-visualization.R
 ├── slides_fs.qmd
 ├── styles.css
 └── _publish.yml</code></pre>
 </div>
 </div>
 </section>
-<section id="estrutura-de-pastas-recomendada" class="level4">
-<h4 class="anchored" data-anchor-id="estrutura-de-pastas-recomendada">Estrutura de Pastas Recomendada</h4>
+<section id="estrutura-recomendada" class="level4">
+<h4 class="anchored" data-anchor-id="estrutura-recomendada">Estrutura recomendada</h4>
 <pre><code>meu_projeto/
 ├── data/
 │   ├── raw/          # Dados originais (somente leitura)
@@ -631,9 +663,14 @@ C:/Users/User/Documents/GitHub/automacao/data/raw_backup</code></pre>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Listar apenas arquivos .R</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_ls</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>), <span class="at">glob =</span> <span class="st">"*.R"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>C:/Users/User/Documents/GitHub/automacao/scripts/01-import.R
+<pre><code>C:/Users/User/Documents/GitHub/automacao/scripts/01-import-data.R
+C:/Users/User/Documents/GitHub/automacao/scripts/01-import.R
+C:/Users/User/Documents/GitHub/automacao/scripts/02-clean-data.R
 C:/Users/User/Documents/GitHub/automacao/scripts/02-clean.R
-C:/Users/User/Documents/GitHub/automacao/scripts/03-analyze.R</code></pre>
+C:/Users/User/Documents/GitHub/automacao/scripts/03-analyze.R
+C:/Users/User/Documents/GitHub/automacao/scripts/03-exploratory-analysis.R
+C:/Users/User/Documents/GitHub/automacao/scripts/04-modeling.R
+C:/Users/User/Documents/GitHub/automacao/scripts/05-visualization.R</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Listar recursivamente (incluir subpastas)</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_ls</span>(<span class="fu">here</span>(<span class="st">"data"</span>), <span class="at">recurse =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -649,6 +686,7 @@ C:/Users/User/Documents/GitHub/automacao/data/raw_backup</code></pre>
 <pre><code>C:/Users/User/Documents/GitHub/automacao/data
 C:/Users/User/Documents/GitHub/automacao/figures
 C:/Users/User/Documents/GitHub/automacao/outputs
+C:/Users/User/Documents/GitHub/automacao/pacote_fs_files
 C:/Users/User/Documents/GitHub/automacao/reports
 C:/Users/User/Documents/GitHub/automacao/scripts</code></pre>
 </div>
@@ -803,17 +841,17 @@ C:/Users/User/Documents/GitHub/automacao/scripts</code></pre>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>arquivo_temp <span class="ot">&lt;-</span> <span class="fu">file_temp</span>(<span class="at">ext =</span> <span class="st">".csv"</span>)</span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>arquivo_temp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>C:/Users/User/AppData/Local/Temp/RtmpCoCZKO/file3a985fbd7f40.csv</code></pre>
+<pre><code>C:/Users/User/AppData/Local/Temp/RtmpqqJCZk/file30cc315a5cdc.csv</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Caminho do diretório temporário</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">path_temp</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>C:/Users/User/AppData/Local/Temp/RtmpCoCZKO</code></pre>
+<pre><code>C:/Users/User/AppData/Local/Temp/RtmpqqJCZk</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Criar arquivo temporário com nome específico</span></span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file_temp</span>(<span class="st">"meus_dados"</span>, <span class="at">ext =</span> <span class="st">".rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>C:/Users/User/AppData/Local/Temp/RtmpCoCZKO/meus_dados3a98b5e7b3e.rds</code></pre>
+<pre><code>C:/Users/User/AppData/Local/Temp/RtmpqqJCZk/meus_dados30cc16ac5aa6.rds</code></pre>
 </div>
 </div>
 <p><strong>Vantagem:</strong> Sistema operacional limpa automaticamente arquivos temporários.</p>
@@ -858,9 +896,13 @@ C:/Users/User/Documents/GitHub/automacao/scripts</code></pre>
 ├── footer.html
 ├── logo.png
 ├── outputs
+├── pacote_fs.html
 ├── pacote_fs.qmd
 ├── pacote_fs.rmarkdown
 ├── pacote_fs.Rproj
+├── pacote_fs_files
+│   └── libs
+├── README.html
 ├── README.md
 ├── reports
 ├── scripts
@@ -1032,8 +1074,8 @@ C:/Users/User/Documents/GitHub/automacao/scripts</code></pre>
 <p><em>Este documento foi criado como material educacional. Sinta-se livre para compartilhar e adaptar conforme necessário!</em></p>
 </section>
 </section>
-<section id="apêndice-cheatsheet-rápido" class="level3">
-<h3 class="anchored" data-anchor-id="apêndice-cheatsheet-rápido">Apêndice: Cheatsheet Rápido</h3>
+<section id="apêndice-cheatsheet" class="level3">
+<h3 class="anchored" data-anchor-id="apêndice-cheatsheet">Apêndice: Cheatsheet</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CRIAR PROJETO</span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_project</span>(<span class="st">"nome_projeto"</span>)</span>
@@ -1081,7 +1123,7 @@ C:/Users/User/Documents/GitHub/automacao/scripts</code></pre>
 
   <p style="text-align: center; font-size: 0.9em; color: #666;">
 
-    Material educacional gratuito | 
+    Material open | 
 
     <a href="https://www.rladiesgyn.com/" target="_blank" style="color: #b048a2;">https://www.rladiesgyn.com/</a>
 
@@ -1757,7 +1799,7 @@ C:/Users/User/Documents/GitHub/automacao/scripts</code></pre>
 <span id="cb63-198"><a href="#cb63-198" aria-hidden="true" tabindex="-1"></a><span class="fu">dir_tree</span>(<span class="fu">here</span>())</span>
 <span id="cb63-199"><a href="#cb63-199" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb63-200"><a href="#cb63-200" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-201"><a href="#cb63-201" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Estrutura de Pastas Recomendada</span></span>
+<span id="cb63-201"><a href="#cb63-201" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Estrutura recomendada</span></span>
 <span id="cb63-202"><a href="#cb63-202" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb63-203"><a href="#cb63-203" aria-hidden="true" tabindex="-1"></a><span class="in">```         </span></span>
 <span id="cb63-204"><a href="#cb63-204" aria-hidden="true" tabindex="-1"></a><span class="in">meu_projeto/</span></span>
@@ -2105,7 +2147,7 @@ C:/Users/User/Documents/GitHub/automacao/scripts</code></pre>
 <span id="cb63-546"><a href="#cb63-546" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb63-547"><a href="#cb63-547" aria-hidden="true" tabindex="-1"></a>*Este documento foi criado como material educacional. Sinta-se livre para compartilhar e adaptar conforme necessário!*</span>
 <span id="cb63-548"><a href="#cb63-548" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-549"><a href="#cb63-549" aria-hidden="true" tabindex="-1"></a><span class="fu">### Apêndice: Cheatsheet Rápido</span></span>
+<span id="cb63-549"><a href="#cb63-549" aria-hidden="true" tabindex="-1"></a><span class="fu">### Apêndice: Cheatsheet</span></span>
 <span id="cb63-550"><a href="#cb63-550" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb63-551"><a href="#cb63-551" aria-hidden="true" tabindex="-1"></a><span class="in">```{r cheatsheet, eval=FALSE}</span></span>
 <span id="cb63-552"><a href="#cb63-552" aria-hidden="true" tabindex="-1"></a><span class="co"># CRIAR PROJETO</span></span>

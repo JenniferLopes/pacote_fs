@@ -2,3 +2,7 @@
   quarto-pub:
     - id: a1e9b687-8ef7-4c1f-8932-1485dae217a7
       url: https://jenniferlopes.quarto.pub/manipulacao_avancada_arquivos
+- source: pacote_fs.qmd
+  quarto-pub:
+    - id: 13ca1250-ff6f-46f4-9af9-887e670d6867
+      url: https://jenniferlopes.quarto.pub/pacote_fs

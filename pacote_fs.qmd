@@ -198,7 +198,7 @@ dir_create(here("reports"))          # Relatórios
 dir_tree(here())
 ```
 
-#### Estrutura de Pastas Recomendada
+#### Estrutura recomendada
 
 ```         
 meu_projeto/
@@ -546,7 +546,7 @@ Você agora domina os **três pilares** da organização de projetos em R:
 
 *Este documento foi criado como material educacional. Sinta-se livre para compartilhar e adaptar conforme necessário!*
 
-### Apêndice: Cheatsheet Rápido
+### Apêndice: Cheatsheet
 
 ```{r cheatsheet, eval=FALSE}
 # CRIAR PROJETO

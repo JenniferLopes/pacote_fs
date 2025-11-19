@@ -1,5 +1,7 @@
 # Tutorial: Gerenciamento de Projetos em R
 
+SERÁ GRAVADO E DISPONIBILIZADO EM DEZEMBRO.
+
 > **Criando projetos, manipulando arquivos e organizando estruturas no R**  
 > Pacotes: `{fs}`, `{usethis}` e `{here}`
 
